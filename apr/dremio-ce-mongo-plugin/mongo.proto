@@ -1,0 +1,28 @@
+/*
+ * Copyright (C) 2017-2019 Dremio Corporation. This file is confidential and private property.
+ */
+syntax = "proto2";
+package com.dremio.elastic.proto;
+
+option java_package = "com.dremio.mongo.proto";
+option java_outer_classname = "MongoReaderProto";
+option optimize_for = SPEED;
+
+enum CollectionType {
+  SINGLE_PARTITION = 1;
+  SUB_PARTITIONED = 2;
+  NODE_PARTITION = 3;
+  RANGE_PARTITION = 4;
+}
+
+message MongoTableXattr {
+  optional string database = 1;
+  optional string collection = 2;
+  optional CollectionType type = 3;
+}
+
+message MongoSplitXattr {
+  optional string min_filter = 1;
+  optional string max_filter = 2;
+  repeated string hosts = 3;
+}

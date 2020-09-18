@@ -1,0 +1,23 @@
+package com.dremio.exec.store.jdbc.dialect.arp;
+
+import com.fasterxml.jackson.annotation.*;
+
+public class SortSpecification extends RelationalAlgebraOperation
+{
+    private final FetchOffset fetchOffset;
+    private final OrderBy orderBy;
+    
+    SortSpecification(@JsonProperty("enable") final boolean enable, @JsonProperty("fetch_offset") final FetchOffset fetchOffset, @JsonProperty("order_by") final OrderBy orderBy) {
+        super(enable);
+        this.fetchOffset = fetchOffset;
+        this.orderBy = orderBy;
+    }
+    
+    public FetchOffset getFetchOffset() {
+        return this.fetchOffset;
+    }
+    
+    public OrderBy getOrderBy() {
+        return this.orderBy;
+    }
+}

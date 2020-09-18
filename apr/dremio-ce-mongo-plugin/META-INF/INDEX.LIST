@@ -1,0 +1,27 @@
+JarIndex-Version: 1.0
+
+dremio-ce-mongo-plugin-4.7.3-202008270723550726-918276ee.jar
+META-INF
+META-INF/maven
+META-INF/maven/com.dremio.community.plugins
+META-INF/maven/com.dremio.community.plugins/dremio-ce-mongo-plugin
+com
+com/dremio
+com/dremio/exec
+com/dremio/exec/planner
+com/dremio/exec/planner/physical
+com/dremio/mongo
+com/dremio/mongo/proto
+com/dremio/plugins
+com/dremio/plugins/mongo
+com/dremio/plugins/mongo/connection
+com/dremio/plugins/mongo/execution
+com/dremio/plugins/mongo/metadata
+com/dremio/plugins/mongo/planning
+com/dremio/plugins/mongo/planning/rels
+com/dremio/plugins/mongo/planning/rules
+git.properties
+mongo-layout.json
+mongo.proto
+sabot-module.conf
+

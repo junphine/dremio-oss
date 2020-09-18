@@ -1,0 +1,86 @@
+{
+  "sourceType": "MONGO",
+  "metadataRefresh": {
+    "datasetDiscovery": true
+  },
+  "form": {
+    "tabs": [
+      {
+        "name": "General",
+        "isGeneral": true,
+        "sections": [
+          {
+            "name": "Connection",
+            "help": {
+              "position": "top",
+              "text": "If MongoDB is sharded, enter the mongos hosts. Otherwise, enter the mongod host."
+            },
+            "elements": [
+              {
+                "propName": "config.hostList",
+                "uiType": "host_list",
+                "emptyLabel": "",
+                "addLabel": "Add Host",
+                "defaultPort": 27017
+              },
+              {
+                "tooltip": "Force encrypted connection over SSL",
+                "propName": "config.useSsl"
+              },
+              {
+                "tooltip": "If enabled, queries will fail if no secondaries are available.",
+                "propName": "config.secondaryReadsOnly"
+              }
+            ]
+          },
+          {
+            "name": "Authentication",
+            "elements": [
+              {
+                "propName": "config.authenticationType"
+              },
+              {
+                "propName": "config.authDatabase"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Advanced Options",
+        "sections": [
+          {
+            "elements": [
+              {
+                "propName": "config.subpartitionSize",
+                "tooltip": "Number of records to be read by query fragments (increases query parallelism). Ignored if value is zero.",
+                "size": "half",
+                "validate": {
+                  "isNumber": true
+                }
+              },
+              {
+                "propName": "config.authenticationTimeoutMillis",
+                "tooltip": "Default is 2000 milliseconds",
+                "size": "half",
+                "validate": {
+                  "isNumber": true
+                }
+              }
+            ]
+          },
+          {
+            "name": "Connection Properties",
+            "elements": [
+              {
+                "emptyLabel": "No properties added",
+                "addLabel": "Add property",
+                "propName": "config.propertyList"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
