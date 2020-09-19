@@ -31,7 +31,7 @@
   <name>Common</name>
 
   <properties>
-    <flatc.download.skip>false</flatc.download.skip>
+    <flatc.download.skip>true</flatc.download.skip>
     <flatc.executable>${project.build.directory}/flatc-${os.detected.classifier}-${fbs.version}.exe</flatc.executable>
     <flatc.generated.files>${project.build.directory}/generated-sources/flatc</flatc.generated.files>
     <os-maven-plugin.version>1.5.0.Final</os-maven-plugin.version>
@@ -70,19 +70,20 @@
           <suppressionsLocation>src/main/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <version>3.0</version>
         <configuration>
+          <skip>true</skip>
           <validHeaders>
             <validHeader>src/main/licenses/io.protostuff.JsonIOUtils.license.txt</validHeader>
           </validHeaders>
           <excludes combine.children="append">
-            <exclude>src/test/resources/maprtest/testconfig/login.conf</exclude> <!-- it needs Java style, was handedited -->
+            <exclude>src/test/resources/maprtest/testconfig/login.conf</exclude> it needs Java style, was handedited
           </excludes>
         </configuration>
-      </plugin>
+      </plugin> -->
 
       <plugin> <!-- download the flatbuffer compiler -->
         <groupId>org.apache.maven.plugins</groupId>
@@ -136,6 +137,7 @@
             </goals>
             <phase>generate-sources</phase>
             <configuration>
+              <skip>${flatc.download.skip}</skip>
               <executable>${flatc.executable}</executable>
               <arguments>
                 <argument>-j</argument>

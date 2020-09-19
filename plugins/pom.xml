@@ -35,14 +35,15 @@
   <modules>
     <module>elasticsearch</module>
     <module>hdfs</module>
-    <module>hive-function-registry</module>
     <module>jdbc</module>
     <module>pdfs</module>
     <module>mongo</module>
     <module>nas</module>
+    
+    <!-- <module>hive-function-registry</module>    
     <module>hive-common</module>
     <module>hive</module>
-    <module>hive2</module>
+    <module>hive2</module> -->
   </modules>
 
   <profiles>
@@ -54,11 +55,11 @@
         </property>
       </activation>
       <modules>
-        <module>adls</module>
+        <!-- <module>adls</module>
         <module>azure</module>
         <module>s3</module>
         <module>hive3</module>
-        <module>awsglue</module>
+        <module>awsglue</module> -->
       </modules>
     </profile>
     <profile>

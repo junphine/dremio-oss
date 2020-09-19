@@ -35,9 +35,9 @@ public class ConcatOp implements SimpleFunction {
 
   @Inject ArrowBuf buffer;
 
-  @Param VarCharHolder left;
-  @Param VarCharHolder right;
-  @Output VarCharHolder out;
+  @Param public VarCharHolder left;
+  @Param public VarCharHolder right;
+  @Output public VarCharHolder out;
 
   @Override
   public void setup() {

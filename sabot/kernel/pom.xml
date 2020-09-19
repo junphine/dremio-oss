@@ -632,10 +632,11 @@
 
   <build>
     <plugins>
-      <plugin>
+      <!-- <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
+          <skip>true</skip>
           <validHeaders>
             <validHeader>src/main/licenses/com.dremio.exec.expr.fn.impl.GuavaUtf8.license.txt</validHeader>
           </validHeaders>
@@ -644,7 +645,7 @@
             <exclude>**/src/test/resources/**</exclude>
           </excludes>
         </configuration>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>com.dremio.tools</groupId>
         <artifactId>dremio-protostuff-maven-plugin</artifactId>

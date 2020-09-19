@@ -33,7 +33,7 @@
     <module>common</module>
     <module>backend</module>
     <module>daemon</module>
-    <module>ui</module>
+    <!-- <module>ui</module> -->
   </modules>
 
   <dependencies>

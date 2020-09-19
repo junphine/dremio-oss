@@ -167,7 +167,7 @@
       <artifactId>dremio-jdbc-driver</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
+    <!-- <dependency>
       <groupId>com.dremio.plugins</groupId>
       <artifactId>dremio-hive-plugin-common</artifactId>
       <version>${project.version}</version>
@@ -198,7 +198,7 @@
       <artifactId>dremio-hive-function-registry</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+ -->
     <dependency>
       <groupId>com.dremio.plugins</groupId>
       <artifactId>dremio-jdbc-plugin</artifactId>
@@ -589,7 +589,7 @@ exit 0
         </property>
       </activation>
       <dependencies>
-        <dependency>
+        <!-- <dependency>
           <groupId>${dremio.hive.plugin-group-id}</groupId>
           <artifactId>${dremio.hive.plugin-artifact-id-prefix}-hive3-plugin</artifactId>
           <version>${project.version}</version>
@@ -620,7 +620,7 @@ exit 0
               <artifactId>*</artifactId>
             </exclusion>
           </exclusions>
-        </dependency>
+        </dependency> -->
       </dependencies>
     </profile>
     <profile>
