@@ -13,6 +13,7 @@
 *.iml
 *.patch
 *.DS_Store
+*.class
 log.path_IS_UNDEFINED
 target/
 node_modules/
