@@ -57,9 +57,11 @@ public class IgniteConf extends AbstractArpConf<IgniteConf> {
 	public String igniteCfg = null;
     
     @Tag(4)
+    @DisplayMetadata(label = "User name")
     public String username;
     
     @Tag(5)
+    @DisplayMetadata(label = "User password")
     @Secret
     public String password;
     
@@ -103,16 +105,16 @@ public class IgniteConf extends AbstractArpConf<IgniteConf> {
 		}
 
 		// @Override
-		public JdbcSchemaFetcher getSchemaFetcher(String name, DataSource dataSource, int timeout,
+		public JdbcSchemaFetcher getSchemaFetcher_1(String name, DataSource dataSource, int timeout,
 				JdbcStoragePlugin.Config config) {
 			JdbcSchemaFetcher fetcher = new IgniteSchemaFetcher(name, dataSource, timeout, config);
 			return fetcher;
 		}
 
 		// @Override
-		public JdbcSchemaFetcher getSchemaFetcher_1(String name, DataSource dataSource, int timeout,
+		public JdbcSchemaFetcher getSchemaFetcher(String name, DataSource dataSource, int timeout,
 				JdbcStoragePlugin.Config config) {
-			String tableQuery = "SELECT NULL AS CAT, TABLE_SCHEMA AS SCH, TABLE_NAME AS NME from information_schema.tables WHERE 1 = 1";
+			String tableQuery = "SELECT NULL AS CAT, TABLE_SCHEMA AS SCH, TABLE_NAME AS NME from information_schema.tables WHERE TABLE_SCHEMA != 'INFORMATION_SCHEMA' ";
 			JdbcSchemaFetcher fetcher = new ArpDialect.ArpSchemaFetcher(tableQuery, name, dataSource, timeout, config,
 					false, false);
 			return fetcher;
