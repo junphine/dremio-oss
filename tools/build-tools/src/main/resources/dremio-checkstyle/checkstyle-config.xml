@@ -84,9 +84,7 @@
       <property name="option" value="top"/>
       <property name="sortStaticImportsAlphabetically" value="true"/>
     </module>
-
-    <module name="UnusedImports">
-    </module>
+    
     <module name="RedundantImport"/>
 
     <!-- Checks for Javadoc comments. -->

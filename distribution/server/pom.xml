@@ -542,7 +542,7 @@ exit 0
 
                       </message>
                       <maxsize>650000000</maxsize>
-                      <minsize>500000000</minsize>
+                      <minsize>200000000</minsize>
                       <files>
                         <file>${project.build.directory}/rpm/${dremio.distribution.name}/RPMS/noarch/${dremio.distribution.name}-${dremio.rpm.version}-${dremio.rpm.release}.noarch.rpm</file>
                       </files>

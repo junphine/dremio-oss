@@ -20,11 +20,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
+/*
 import org.apache.arrow.flatbuf.Int;
 import org.apache.arrow.flatbuf.KeyValue;
 import org.apache.arrow.flatbuf.OldField;
 import org.apache.arrow.flatbuf.OldSchema;
 import org.apache.arrow.flatbuf.Type;
+*/
 import org.apache.arrow.vector.types.DateUnit;
 import org.apache.arrow.vector.types.FloatingPointPrecision;
 import org.apache.arrow.vector.types.IntervalUnit;
@@ -65,7 +67,7 @@ public class DatasetConfigUpgrade extends UpgradeTask implements LegacyUpgradeTa
 
   @Override
   public Version getMaxVersion() {
-    return VERSION_210;
+    return VERSION_300;
   }
 
   @Override
@@ -116,203 +118,9 @@ public class DatasetConfigUpgrade extends UpgradeTask implements LegacyUpgradeTa
     if (schemaBytes == null) {
       return null;
     }
-    try {
-      OldSchema oldSchema = OldSchema.getRootAsOldSchema(schemaBytes.asReadOnlyByteBuffer());
-      byte[] newschemaBytes = convertFromOldSchema(oldSchema);
-      datasetConfig.setRecordSchema(ByteString.copyFrom(newschemaBytes));
-      return datasetConfig;
-    } catch (Exception e) {
-      System.out.println("Unable to update Arrow Schema for: " + PathUtils
-        .constructFullPath(Optional.ofNullable(datasetConfig.getFullPathList()).orElse(Lists.newArrayList())));
-      e.printStackTrace(System.out);
-      return null;
-    }
+    return null;
   }
 
-  /**
-   * Converting old Arrow Schema to new one based on Arrow version used
-   * in Dremio as of 2.1.0
-   * @param oldSchema
-   * @return
-   */
-  @VisibleForTesting
-  byte[] convertFromOldSchema(OldSchema oldSchema) {
-    FlatBufferBuilder builder = new FlatBufferBuilder();
-    int[] fieldOffsets = new int[oldSchema.fieldsLength()];
-    for (int i = 0; i < oldSchema.fieldsLength(); i++) {
-      fieldOffsets[i] = convertFromOldField(oldSchema.fields(i), builder);
-    }
-    int fieldsOffset = org.apache.arrow.flatbuf.Schema.createFieldsVector(builder, fieldOffsets);
-    int[] metadataOffsets = new int[oldSchema.customMetadataLength()];
-    for (int i = 0; i < metadataOffsets.length; i++) {
-      int keyOffset = builder.createString(oldSchema.customMetadata(i).key());
-      int valueOffset = builder.createString(oldSchema.customMetadata(i).value());
-      KeyValue.startKeyValue(builder);
-      KeyValue.addKey(builder, keyOffset);
-      KeyValue.addValue(builder, valueOffset);
-      metadataOffsets[i] = KeyValue.endKeyValue(builder);
-    }
-    int metadataOffset = org.apache.arrow.flatbuf.Field.createCustomMetadataVector(builder, metadataOffsets);
-    org.apache.arrow.flatbuf.Schema.startSchema(builder);
-    org.apache.arrow.flatbuf.Schema.addFields(builder, fieldsOffset);
-    org.apache.arrow.flatbuf.Schema.addCustomMetadata(builder, metadataOffset);
-    builder.finish(org.apache.arrow.flatbuf.Schema.endSchema(builder));
-    return builder.sizedByteArray();
-  }
-
-  /**
-   * Converting old Arrow Field to new one based on Arrow version used
-   * in Dremio as of 2.1.0
-   * @param oldField
-   * @param builder
-   * @return
-   */
-  private int convertFromOldField(OldField oldField, FlatBufferBuilder builder) {
-    int nameOffset = oldField.name() == null ? -1 : builder.createString(oldField.name());
-    ArrowType arrowType = getTypeForField(oldField);
-    int typeOffset = arrowType.getType(builder);
-    int dictionaryOffset = -1;
-    org.apache.arrow.flatbuf.DictionaryEncoding oldDictionaryEncoding = oldField.dictionary();
-    if (oldDictionaryEncoding != null) {
-      int intType = Int.createInt(builder,
-        oldDictionaryEncoding.indexType().bitWidth(),
-        oldDictionaryEncoding.indexType().isSigned());
-
-      dictionaryOffset =
-        org.apache.arrow.flatbuf.DictionaryEncoding.createDictionaryEncoding(builder,
-          oldDictionaryEncoding.id(),
-          intType,
-          oldDictionaryEncoding.isOrdered(),
-          oldDictionaryEncoding.dictionaryKind());
-    }
-    int childrenLength = oldField.childrenLength();
-    int[] childrenData = new int[childrenLength];
-    for (int i = 0; i < childrenLength; i++) {
-      childrenData[i] = convertFromOldField(oldField.children(i), builder);
-    }
-    int childrenOffset = org.apache.arrow.flatbuf.Field.createChildrenVector(builder, childrenData);
-    int metadataLength = oldField.customMetadataLength();
-    int[] metadataOffsets = new int[metadataLength];
-    for (int i = 0; i < metadataOffsets.length; i++) {
-      KeyValue keyValue = oldField.customMetadata(i);
-      int keyOffset = builder.createString(keyValue.key());
-      int valueOffset = builder.createString(keyValue.value());
-      KeyValue.startKeyValue(builder);
-      KeyValue.addKey(builder, keyOffset);
-      KeyValue.addValue(builder, valueOffset);
-      metadataOffsets[i] = KeyValue.endKeyValue(builder);
-    }
-    int metadataOffset = org.apache.arrow.flatbuf.Field.createCustomMetadataVector(builder, metadataOffsets);
-    org.apache.arrow.flatbuf.Field.startField(builder);
-    if (oldField.name() != null) {
-      org.apache.arrow.flatbuf.Field.addName(builder, nameOffset);
-    }
-    org.apache.arrow.flatbuf.Field.addNullable(builder, oldField.nullable());
-    org.apache.arrow.flatbuf.Field.addTypeType(builder, oldField.typeType());
-    org.apache.arrow.flatbuf.Field.addType(builder, typeOffset);
-    org.apache.arrow.flatbuf.Field.addChildren(builder, childrenOffset);
-    org.apache.arrow.flatbuf.Field.addCustomMetadata(builder, metadataOffset);
-    if (oldDictionaryEncoding != null) {
-      org.apache.arrow.flatbuf.Field.addDictionary(builder, dictionaryOffset);
-    }
-    return org.apache.arrow.flatbuf.Field.endField(builder);
-  }
-
-  /**
-   * Really just copy from Arrow, as it accepts only Field
-   * otherwise it is not quite possible to construct type offset
-   * as it is union of different types that have different structuure
-   * @param field
-   * @return
-   */
-  private static org.apache.arrow.vector.types.pojo.ArrowType getTypeForField(org.apache.arrow.flatbuf.OldField field) {
-    switch(field.typeType()) {
-      case Type.Null: {
-        org.apache.arrow.flatbuf.Null nullType = (org.apache.arrow.flatbuf.Null) field.type(new org.apache.arrow.flatbuf.Null());
-        return new ArrowType.Null();
-      }
-      case Type.Struct_: {
-        org.apache.arrow.flatbuf.Struct_ struct_Type = (org.apache.arrow.flatbuf.Struct_) field.type(new org.apache.arrow.flatbuf.Struct_());
-        return new ArrowType.Struct();
-      }
-      case Type.List: {
-        org.apache.arrow.flatbuf.List listType = (org.apache.arrow.flatbuf.List) field.type(new org.apache.arrow.flatbuf.List());
-        return new ArrowType.List();
-      }
-      case Type.FixedSizeList: {
-        org.apache.arrow.flatbuf.FixedSizeList fixedsizelistType = (org.apache.arrow.flatbuf.FixedSizeList) field.type(new org.apache.arrow.flatbuf.FixedSizeList());
-        int listSize = fixedsizelistType.listSize();
-        return new ArrowType.FixedSizeList(listSize);
-      }
-      case Type.Union: {
-        org.apache.arrow.flatbuf.Union unionType = (org.apache.arrow.flatbuf.Union) field.type(new org.apache.arrow.flatbuf.Union());
-        short mode = unionType.mode();
-        int[] typeIds = new int[unionType.typeIdsLength()];
-        for (int i = 0; i< typeIds.length; ++i) {
-          typeIds[i] = unionType.typeIds(i);
-        }
-        return new ArrowType.Union(UnionMode.fromFlatbufID(mode), typeIds);
-      }
-      case Type.Int: {
-        org.apache.arrow.flatbuf.Int intType = (org.apache.arrow.flatbuf.Int) field.type(new org.apache.arrow.flatbuf.Int());
-        int bitWidth = intType.bitWidth();
-        boolean isSigned = intType.isSigned();
-        return new ArrowType.Int(bitWidth, isSigned);
-      }
-      case Type.FloatingPoint: {
-        org.apache.arrow.flatbuf.FloatingPoint floatingpointType = (org.apache.arrow.flatbuf.FloatingPoint) field.type(new org.apache.arrow.flatbuf.FloatingPoint());
-        short precision = floatingpointType.precision();
-        return new ArrowType.FloatingPoint(FloatingPointPrecision.fromFlatbufID(precision));
-      }
-      case Type.Utf8: {
-        org.apache.arrow.flatbuf.Utf8 utf8Type = (org.apache.arrow.flatbuf.Utf8) field.type(new org.apache.arrow.flatbuf.Utf8());
-        return new ArrowType.Utf8();
-      }
-      case Type.Binary: {
-        org.apache.arrow.flatbuf.Binary binaryType = (org.apache.arrow.flatbuf.Binary) field.type(new org.apache.arrow.flatbuf.Binary());
-        return new ArrowType.Binary();
-      }
-      case Type.FixedSizeBinary: {
-        org.apache.arrow.flatbuf.FixedSizeBinary fixedsizebinaryType = (org.apache.arrow.flatbuf.FixedSizeBinary) field.type(new org.apache.arrow.flatbuf.FixedSizeBinary());
-        int byteWidth = fixedsizebinaryType.byteWidth();
-        return new ArrowType.FixedSizeBinary(byteWidth);
-      }
-      case Type.Bool: {
-        org.apache.arrow.flatbuf.Bool boolType = (org.apache.arrow.flatbuf.Bool) field.type(new org.apache.arrow.flatbuf.Bool());
-        return new ArrowType.Bool();
-      }
-      case Type.Decimal: {
-        org.apache.arrow.flatbuf.Decimal decimalType = (org.apache.arrow.flatbuf.Decimal) field.type(new org.apache.arrow.flatbuf.Decimal());
-        int precision = decimalType.precision();
-        int scale = decimalType.scale();
-        return new ArrowType.Decimal(precision, scale);
-      }
-      case Type.Date: {
-        org.apache.arrow.flatbuf.Date dateType = (org.apache.arrow.flatbuf.Date) field.type(new org.apache.arrow.flatbuf.Date());
-        short unit = dateType.unit();
-        return new ArrowType.Date(DateUnit.fromFlatbufID(unit));
-      }
-      case Type.Time: {
-        org.apache.arrow.flatbuf.Time timeType = (org.apache.arrow.flatbuf.Time) field.type(new org.apache.arrow.flatbuf.Time());
-        short unit = timeType.unit();
-        int bitWidth = timeType.bitWidth();
-        return new ArrowType.Time(TimeUnit.fromFlatbufID(unit), bitWidth);
-      }
-      case Type.Timestamp: {
-        org.apache.arrow.flatbuf.Timestamp timestampType = (org.apache.arrow.flatbuf.Timestamp) field.type(new org.apache.arrow.flatbuf.Timestamp());
-        short unit = timestampType.unit();
-        String timezone = timestampType.timezone();
-        return new ArrowType.Timestamp(TimeUnit.fromFlatbufID(unit), timezone);
-      }
-      case Type.Interval: {
-        org.apache.arrow.flatbuf.Interval intervalType = (org.apache.arrow.flatbuf.Interval) field.type(new org.apache.arrow.flatbuf.Interval());
-        short unit = intervalType.unit();
-        return new ArrowType.Interval(IntervalUnit.fromFlatbufID(unit));
-      }
-      default:
-        throw new UnsupportedOperationException("Unsupported type: " + field.typeType());
-    }
-  }
 
   @Override
   public String toString() {

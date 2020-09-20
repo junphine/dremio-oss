@@ -34,16 +34,7 @@
       <groupId>com.dremio</groupId>
       <artifactId>dremio-common</artifactId>
       <version>${project.version}</version>
-    </dependency>  
-      
-    <dependency>
-      <groupId>com.dremio</groupId>
-      <artifactId>dremio-common-flatbuf</artifactId>
-      <version>${project.version}</version>
-      <scope>system</scope>
-      <systemPath>D:\DataBase\dremio\jars\dremio-common-flatbuf-${project.version}.jar</systemPath>
-      
-    </dependency>
+    </dependency> 
     
     <dependency>
       <groupId>com.dremio</groupId>
