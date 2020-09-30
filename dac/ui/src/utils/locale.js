@@ -15,6 +15,11 @@
  */
 import IntlMessageFormat from 'intl-messageformat';
 import enStrings from 'dyn-load/locales/en.json';
+import zhStrings from 'dyn-load/locales/zh_CN.json';
+
+let messages = {};
+messages["en"] = enStrings;
+messages["zh-CN"] = zhStrings;
 
 export function getLocale() {
   // todo: write code to actually handle multiple options
@@ -31,6 +36,9 @@ export function getLocale() {
         }
       } else {
         language = localStorage.getItem('language');
+        if(language=='zh' || language=='zh-CN'){
+        	localeStrings = zhStrings;
+        }
       }
     }
   } catch (e) {
@@ -40,7 +48,8 @@ export function getLocale() {
 }
 
 export function formatMessage(message, values) {
-  const msg = new IntlMessageFormat(enStrings[message], getLocale().language);
+  let local = getLocale();
+  const msg = new IntlMessageFormat(local.localeStrings[message], local.language);
   // todo: write code to actually handle multiple options
   return msg.format(values);
 }

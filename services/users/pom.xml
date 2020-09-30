@@ -69,6 +69,12 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+    
+    <dependency>
+	    <groupId>org.pac4j</groupId>
+	    <artifactId>pac4j-ldap</artifactId>
+	    <version>4.1.0</version>
+	</dependency>
   </dependencies>
 
   <build>

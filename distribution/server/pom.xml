@@ -167,6 +167,13 @@
       <artifactId>dremio-jdbc-driver</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.dremio.plugins</groupId>
+      <artifactId>dremio-jdbc-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <!-- <dependency>
       <groupId>com.dremio.plugins</groupId>
       <artifactId>dremio-hive-plugin-common</artifactId>
@@ -198,12 +205,8 @@
       <artifactId>dremio-hive-function-registry</artifactId>
       <version>${project.version}</version>
     </dependency>
- -->
-    <dependency>
-      <groupId>com.dremio.plugins</groupId>
-      <artifactId>dremio-jdbc-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+ 
+    
 
     <dependency>
       <groupId>org.apache.hadoop</groupId>
@@ -211,7 +214,7 @@
       <version>3.2.0</version>
       <type>zip</type>
     </dependency>
-
+-->
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common-native</artifactId>
@@ -299,7 +302,7 @@
 
                   </message>
                   <maxsize>650000000</maxsize>
-                  <minsize>500000000</minsize>
+                  <minsize>100000000</minsize>
                   <files>
                     <file>${project.build.directory}/${dremio.distribution.name}-${project.version}.tar.gz</file>
                   </files>
@@ -542,7 +545,7 @@ exit 0
 
                       </message>
                       <maxsize>650000000</maxsize>
-                      <minsize>200000000</minsize>
+                      <minsize>100000000</minsize>
                       <files>
                         <file>${project.build.directory}/rpm/${dremio.distribution.name}/RPMS/noarch/${dremio.distribution.name}-${dremio.rpm.version}-${dremio.rpm.release}.noarch.rpm</file>
                       </files>

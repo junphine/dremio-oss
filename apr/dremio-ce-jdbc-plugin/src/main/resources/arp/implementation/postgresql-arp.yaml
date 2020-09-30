@@ -132,6 +132,19 @@ data_types:
       name: "interval_ym"
     dremio:
       name: "interval_year_month"
+  - source:
+      name: "int_unsigned"
+    dremio:
+      name: "integer"      
+  - source:
+      name: "smallint_unsigned"
+    dremio:
+      name: "integer"
+  - source:
+      name: "bigint_unsigned"
+    dremio:
+      name: "bigint"      
+      
 relational_algebra:
   aggregation:
     enable: true

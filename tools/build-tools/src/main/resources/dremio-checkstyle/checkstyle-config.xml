@@ -53,11 +53,11 @@
   </module>
 
   <!-- No TAB characters -->
-  <module name="FileTabCharacter"/>  
+ <!--  <module name="FileTabCharacter"/>   -->
 
-  <module name="RegexpSingleline">
+ <!--  <module name="RegexpSingleline">
     <property name="format" value="\s+$"/>
-  </module>
+  </module> -->
 
   <module name="SuppressWarningsFilter" />
 
@@ -126,9 +126,9 @@
 
     <!-- Modifier Checks -->
     <!-- See http://checkstyle.sourceforge.net/config_modifier.html -->
-    <module name="ModifierOrder">
+    <!-- <module name="ModifierOrder">
       <message key="mod.order" value="''{0}'' modifier out of order with the JLS suggestions: public protected private abstract static final transient volatile synchronized native strictfp"/>
-    </module>
+    </module> -->
     <!-- module name="RedundantModifier"/ -->
 
     <!-- Checks for blocks. You know, those {}'s -->
@@ -141,7 +141,7 @@
     <!-- Checks for common coding problems -->
     <!-- See http://checkstyle.sf.net/config_coding.html -->
     <module name="EmptyStatement"/>
-    <module name="EqualsAvoidNull"/>
+    <!-- <module name="EqualsAvoidNull"/> -->
     <module name="EqualsHashCode"/>
     <module name="HiddenField">
       <property name="tokens" value="VARIABLE_DEF"/>
@@ -163,13 +163,13 @@
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
     <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier">
+    <!-- <module name="VisibilityModifier">
       <property name="ignoreAnnotationCanonicalNames" value="org.junit.Rule" />
       <property name="ignoreAnnotationCanonicalNames" value="org.junit.ClassRule" />
       <property name="ignoreAnnotationCanonicalNames" value="com.google.common.annotations.VisibleForTesting" />
       <property name="ignoreAnnotationCanonicalNames" value="io.protostuff.Tag" />
       <property name="allowPublicImmutableFields" value="true" />
-    </module>
+    </module> -->
 
     <!-- Miscellaneous other checks. -->
     <!-- See http://checkstyle.sf.net/config_misc.html -->

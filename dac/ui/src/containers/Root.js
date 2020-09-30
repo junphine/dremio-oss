@@ -27,9 +27,10 @@ import intercomUtils from 'utils/intercomUtils';
 
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enData from 'react-intl/locale-data/en';
+import zhData from 'react-intl/locale-data/zh';
 import { getLocale } from '../utils/locale';
 
-addLocaleData([...enData]);
+addLocaleData([...enData,...zhData]);
 
 export default class Root extends Component {
 

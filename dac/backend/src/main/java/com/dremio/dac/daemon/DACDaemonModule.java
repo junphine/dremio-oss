@@ -205,6 +205,7 @@ import com.dremio.service.scheduler.LocalSchedulerService;
 import com.dremio.service.scheduler.SchedulerService;
 import com.dremio.service.spill.SpillService;
 import com.dremio.service.spill.SpillServiceImpl;
+import com.dremio.service.users.LdapUserService;
 import com.dremio.service.users.SimpleUserService;
 import com.dremio.service.users.UserService;
 import com.dremio.services.fabric.FabricServiceImpl;
@@ -1076,8 +1077,16 @@ public class DACDaemonModule implements DACModule {
       logger.info("Internal user/group service is configured.");
       return true;
     }
-
-    logger.error("Unknown value '{}' set for {}. Accepted values are ['internal', 'ldap']", authType, WEB_AUTH_TYPE);
+    //add@byron
+    if ("ldap".equals(authType)) {
+    	String authFile = config.getString("services.coordinator.web.auth.ldap_config");
+    	SimpleUserService internalUserService = null; // new SimpleUserService(registry.provider(LegacyKVStoreProvider.class));
+        registry.bindProvider(UserService.class, () -> new LdapUserService(authFile,internalUserService));
+        logger.info("LDAP user/group service is configured.");
+        return true;
+    }
+    //end@
+    logger.error("Unknown value '{}' set for {}. Accepted values are ['internal', 'ldap', 'db']", authType, WEB_AUTH_TYPE);
     throw new RuntimeException(
         String.format("Unknown auth type '%s' set in config path '%s'", authType, WEB_AUTH_TYPE));
   }
