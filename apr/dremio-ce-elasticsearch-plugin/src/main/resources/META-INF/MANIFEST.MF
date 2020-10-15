@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Implementation-Title: Community - Storage Plugins - Elasticsearch
+Implementation-Version: 4.8.0-202009180238090394-b0a98b73
+Built-By: 
+Specification-Title: Community - Storage Plugins - Elasticsearch
+Implementation-Vendor-Id: com.dremio.community.plugins
+Extension-Name: com.dremio
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_242
+Specification-Version: 4.8
+Implementation-URL: https://github.com/dremio/dremio-oss/dremio-ce-par
+ ent/dremio-ce-parent-plugin/dremio-ce-elasticsearch-plugin
+url: http://www.dremio.com
+

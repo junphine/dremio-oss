@@ -393,6 +393,9 @@ export class ExploreInfoHeader extends PureComponent {
   openPowerBi = () => {
     this.handleShowBI(NEXT_ACTIONS.openPowerBI);
   };
+  openDavinci = () => {
+    this.handleShowBI(NEXT_ACTIONS.openDavinci);
+  };
 
   renderAnalyzeButton = (name, icon, onclick, iconSize) => {
     return (<SimpleButton buttonStyle='secondary' onClick={onclick} data-qa={name} style={style.iconButton}>
@@ -405,11 +408,13 @@ export class ExploreInfoHeader extends PureComponent {
     const analyzeToolsConfig = getAnalyzeToolsConfig(settings, config);
     const showTableau = analyzeToolsConfig.tableau.enabled;
     const showPowerBI = analyzeToolsConfig.powerbi.enabled;
-    if (!showTableau && !showPowerBI) return null;
+    const showDavinci = analyzeToolsConfig.davinci.enabled;
+    if (!showTableau && !showPowerBI && !showDavinci) return null;
     return (
       <Fragment>
         {showPowerBI && this.renderAnalyzeButton(la('Power BI'), 'PowerBi.svg', this.openPowerBi, 24)}
         {showTableau && this.renderAnalyzeButton(la('Tableau'), 'Tableau.svg', this.openTableau, 19)}
+        {showDavinci && this.renderAnalyzeButton(la('Davinci'), 'Davinci.svg', this.openDavinci, 24)}
       </Fragment>
     );
   };

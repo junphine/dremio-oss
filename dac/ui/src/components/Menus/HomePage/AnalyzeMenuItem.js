@@ -28,7 +28,7 @@ import SubMenu from 'components/Menus/SubMenu';
 import Art from 'components/Art';
 import AnalyzeMenuItems from 'components/Menus/AnalyzeMenuItems';
 
-import { openTableau, openQlikSense, openPowerBI } from 'actions/explore/download';
+import { openTableau, openQlikSense, openPowerBI, openDavinci } from 'actions/explore/download';
 
 @injectIntl
 @pureRender
@@ -39,6 +39,7 @@ export class AnalyzeMenuItem extends Component {
     openTableau: PropTypes.func,
     openQlikSense: PropTypes.func,
     openPowerBI: PropTypes.func,
+    openDavinci: PropTypes.func,
     settings: PropTypes.instanceOf(Immutable.Map),
     closeMenu: PropTypes.func,
     intl: PropTypes.object.isRequired
@@ -54,6 +55,11 @@ export class AnalyzeMenuItem extends Component {
     this.props.closeMenu();
   };
 
+  handleDavinciClick = () => {
+    this.props.openDavinci(this.props.entity);
+    this.props.closeMenu();
+  };
+
   handlePowerBIClick = () => {
     this.props.openPowerBI(this.props.entity);
     this.props.closeMenu();
@@ -62,6 +68,7 @@ export class AnalyzeMenuItem extends Component {
   haveEnabledTools = (analyzeToolsConfig) => {
     return analyzeToolsConfig.tableau.enabled
       || analyzeToolsConfig.powerbi.enabled
+      || analyzeToolsConfig.davinci.enabled
       || analyzeToolsConfig.qlik.enabled;
   };
 
@@ -78,6 +85,7 @@ export class AnalyzeMenuItem extends Component {
             openTableau={this.handleTableauClick}
             openPowerBI={this.handlePowerBIClick}
             openQlikSense={this.handleQlikClick}
+            openDavinci={this.handleDavinciClick}
             analyzeToolsConfig={analyzeToolsConfig}
           />
         </SubMenu>
@@ -92,6 +100,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   openTableau,
   openQlikSense,
+  openDavinci,
   openPowerBI
 })(AnalyzeMenuItem);
 

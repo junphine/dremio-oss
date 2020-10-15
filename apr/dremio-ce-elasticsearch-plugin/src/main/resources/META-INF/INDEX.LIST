@@ -1,0 +1,17 @@
+JarIndex-Version: 1.0
+
+dremio-ce-elasticsearch-plugin-4.8.0-202009180238090394-b0a98b73.jar
+META-INF
+META-INF/maven
+META-INF/maven/com.dremio.community.plugins
+META-INF/maven/com.dremio.community.plugins/dremio-ce-elasticsearch-plugin
+com
+com/dremio
+com/dremio/extras
+com/dremio/extras/plugins
+com/dremio/extras/plugins/elastic
+com/dremio/extras/plugins/elastic/execution
+com/dremio/extras/plugins/elastic/planning
+git.properties
+sabot-module.conf
+

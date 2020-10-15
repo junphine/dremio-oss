@@ -195,6 +195,14 @@
    > `<=` [com.dremio.dac.explore.model.DatasetSearchUIs](#class-comdremiodacexploremodeldatasetsearchuis)   
 
 
+## Resource defined by class com.dremio.dac.explore.bi.DavinciResource
+
+ - GET /davinci/{datasetId}   
+   > `=>`   
+   > Host: {String}   
+   > `<=` javax.ws.rs.core.Response   
+
+
 ## Resource defined by class com.dremio.dac.resource.DevelopmentOptionsResource
 
  - POST /development_options/acceleration/clearall   
@@ -4754,6 +4762,7 @@ any
       secretKey: "abc",
       stsEndpoint: "abc",
     },
+    disablePublicIp: true | false,
     extraConfProps: "abc",
     instanceType: "abc",
     nodeIamInstanceProfile: "abc",
@@ -4811,6 +4820,7 @@ any
       secretKey: "abc",
       stsEndpoint: "abc",
     },
+    disablePublicIp: true | false,
     extraConfProps: "abc",
     instanceType: "abc",
     nodeIamInstanceProfile: "abc",
@@ -4871,6 +4881,7 @@ any
       secretKey: "abc",
       stsEndpoint: "abc",
     },
+    disablePublicIp: true | false,
     extraConfProps: "abc",
     instanceType: "abc",
     nodeIamInstanceProfile: "abc",
@@ -4998,6 +5009,7 @@ any
           secretKey: "abc",
           stsEndpoint: "abc",
         },
+        disablePublicIp: true | false,
         extraConfProps: "abc",
         instanceType: "abc",
         nodeIamInstanceProfile: "abc",

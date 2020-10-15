@@ -186,11 +186,11 @@
       <version>0.2.5</version>
     </dependency>
 
-    <dependency>
+    <!-- <dependency>
       <groupId>com.dremio.data</groupId>
       <artifactId>dremio-tpch-sample-data</artifactId>
       <scope>test</scope>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>org.apache.arrow</groupId>
       <artifactId>arrow-vector</artifactId>
@@ -628,11 +628,19 @@
       <artifactId>dremio-services-catalog-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+	    <groupId>org.jetbrains</groupId>
+	    <artifactId>annotations</artifactId>
+	    <version>13.0</version>
+	    <scope>test</scope>	    
+	</dependency>
+
   </dependencies>
 
   <build>
     <plugins>
-      <!-- <plugin>
+      <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
@@ -645,7 +653,7 @@
             <exclude>**/src/test/resources/**</exclude>
           </excludes>
         </configuration>
-      </plugin> -->
+      </plugin>
       <plugin>
         <groupId>com.dremio.tools</groupId>
         <artifactId>dremio-protostuff-maven-plugin</artifactId>

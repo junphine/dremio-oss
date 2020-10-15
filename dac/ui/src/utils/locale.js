@@ -17,27 +17,34 @@ import IntlMessageFormat from 'intl-messageformat';
 import enStrings from 'dyn-load/locales/en.json';
 import zhStrings from 'dyn-load/locales/zh_CN.json';
 
-let messages = {};
-messages["en"] = enStrings;
-messages["zh-CN"] = zhStrings;
+const messages = {};
+messages['en'] = enStrings;
+messages['zh-CN'] = zhStrings;
 
 export function getLocale() {
   // todo: write code to actually handle multiple options
   let language = (navigator.languages && navigator.languages[0]) || navigator.language;
-  language = 'en'; // hardcode to only supported option today
-  let localeStrings = enStrings;
+  if (!(language in messages)) {
+    language = 'en'; // hardcode to only supported option today
+  }
+  
+  let localeStrings = messages[language];
   try {
     if (localStorage.getItem('language')) {
       if (localStorage.getItem('language') === 'ids') {
         localeStrings = undefined;
       } else if (localStorage.getItem('language') === 'double') {
         for (const [key, value] of Object.entries(localeStrings)) {
-          localeStrings[key] = value + ' ' + value;
+          localeStrings[key] = key + ' ' + value;
         }
       } else {
         language = localStorage.getItem('language');
-        if(language=='zh' || language=='zh-CN'){
-        	localeStrings = zhStrings;
+        if (language in messages) {
+          localeStrings = messages[language];
+        }
+        else {
+          language = 'en';
+          localeStrings = enStrings;
         }
       }
     }
@@ -48,7 +55,7 @@ export function getLocale() {
 }
 
 export function formatMessage(message, values) {
-  let local = getLocale();
+  const local = getLocale();
   const msg = new IntlMessageFormat(local.localeStrings[message], local.language);
   // todo: write code to actually handle multiple options
   return msg.format(values);

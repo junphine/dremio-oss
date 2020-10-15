@@ -105,18 +105,18 @@ public class JdbcStoragePlugin implements StoragePlugin, SourceMetadata, Support
     public SourceState getState() {
         if (null == this.source) {
             JdbcStoragePlugin.LOGGER.error("JDBC source {} has not been started.", this.name);
-            return SourceState.badState(new String[] { String.format("JDBC source %s has not been started.", this.name) });
+            return SourceState.badState(String.format("JDBC source %s has not been started.", this.name));
         }
         try (final Connection connection = this.source.getConnection()) {
             final boolean isValid = connection.isValid(1);
             if (isValid) {
                 return SourceState.GOOD;
             }
-            return SourceState.badState(new String[] { "Connection is not valid." });
+            return SourceState.badState("Connection is not valid.");
         }
         catch (Exception e) {
             JdbcStoragePlugin.LOGGER.error("Connection is not valid.", (Throwable)e);
-            return SourceState.badState(e);
+            return SourceState.badState("Connection is not valid.", e);
         }
     }
     

@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.jetbrains.annotations.NotNull;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class TestNodeStatsListener {
       Assert.assertTrue("3 response should have been recorded",responseSize == 3);
   }
 
-  @NotNull
+
   private CoordExecRPC.NodeStatResp getNodeStatsResponse(String s) {
     return CoordExecRPC.NodeStatResp.newBuilder().setNodeStats(CoordExecRPC.NodeStats.newBuilder().setName(s).setPort(1234).build())
       .setEndpoint(CoordinationProtos.NodeEndpoint.getDefaultInstance()).build();

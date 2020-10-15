@@ -16,7 +16,7 @@
     "postinstall": "[ \"$(uname -s)\" == \"Darwin\" ] && npm install fsevents --no-save || true",
     "update-shrinkwrap": "rm -rf node_modules npm-shrinkwrap.json && npm install --registry https://registry.npmjs.org && npm shrinkwrap --dev",
     "builddev": "webpack",
-    "build": "npm run lint && NODE_ENV=production webpack",
+    "build": "NODE_ENV=production && webpack",
     "buildprod": "npm run build -- '$@'",
     "buildproddetail": "npm run build -- --json '$@' | analyze-bundle-size",
     "startprodwin": "npm run updateTSConfig && set NODE_ENV=production && node server.js",
@@ -191,5 +191,6 @@
       "forkedModules",
       "build"
     ]
-  }
+  },
+  "__npminstall_done": false
 }

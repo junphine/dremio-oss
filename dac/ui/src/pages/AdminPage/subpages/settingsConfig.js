@@ -70,5 +70,7 @@ export const SETTINGS_TOOL_ID = {
   powerbi: 'client.tools.powerbi',
   tableau: 'client.tools.tableau',
   qlik: 'client.tools.qlik',
-  qlikEnabled: 'support.dac.qlik'
+  qlikEnabled: 'support.dac.qlik',
+  davinci: 'client.tools.davinci',
+  davinciEnabled: 'support.dac.davinci'
 };

@@ -75,7 +75,7 @@
     "block-scoped-var": "error",
     "complexity": ["error", 40],
     "default-case": "error",
-    "dot-notation": "error",
+    
     "eqeqeq": "error",
     "no-alert": "error",
     "no-caller": "error",
@@ -109,7 +109,7 @@
     "no-shadow-restricted-names": "error",
     "no-shadow": "error",
     "no-undef-init": "error",
-    "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
+    
     "callback-return": "error",
     "no-mixed-requires": "error",
     "no-path-concat": "error",
@@ -131,7 +131,7 @@
     "object-shorthand": "error",
     "no-spaced-func": "error",
     "no-trailing-spaces": "error",
-    "no-unneeded-ternary": "error",
+    "no-unneeded-ternary": "error",	
     "quotes": ["error", "single", "avoid-escape"],
     "semi-spacing": ["error", {"before": false, "after": true}],
     "semi": ["error", "always"],
@@ -152,7 +152,7 @@
     "max-params": ["error", 6],
     "no-bitwise": "error",
     "id-match": ["error", "^[a-zA-Z_$]+[a-zA-Z0-9_]*$", {"properties": false}],
-    "linebreak-style": ["error", "unix"],
+   
     "curly": ["error", "multi-line", "consistent"],
     "import/export": "error",
     "import/order": ["error", {

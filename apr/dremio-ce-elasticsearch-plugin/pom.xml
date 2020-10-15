@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<!--
+
+    Copyright (C) 2017-2019 Dremio Corporation. This file is confidential and private property.
+
+-->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.dremio.plugins</groupId>
+    <artifactId>dremio-plugin-parent</artifactId>
+    <version>4.8.0-202009180238090394-b0a98b73</version>
+  </parent>
+
+  <artifactId>dremio-ce-elasticsearch-plugin</artifactId>
+  <name>Community - Storage Plugins - Elasticsearch</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.dremio.plugins</groupId>
+      <artifactId>dremio-elasticsearch-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dremio.plugins</groupId>
+      <artifactId>dremio-elasticsearch-plugin</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>com.vividsolutions</groupId>
+      <artifactId>jts</artifactId>
+      <version>1.13</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.dremio.sabot</groupId>
+      <artifactId>dremio-sabot-kernel</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+      <exclusions>
+      	<exclusion>
+      		<groupId>jdk.tools</groupId>
+      		<artifactId>jdk.tools</artifactId>
+      	</exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.dremio</groupId>
+      <artifactId>dremio-common</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-test-framework</artifactId>
+      <version>${lucene.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>de.huxhorn.lilith</groupId>
+      <artifactId>de.huxhorn.lilith.logback.appender.multiplex-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <!-- Tests for ES exceeds maximum script compilation limit. Profiles
+         below increase that limit in settings. Because ES 5 uses
+         script.max_compilations_per_minute but ES 6 uses
+         script.max_compilations_rate, we need to switch between two profiles.
+    -->
+    <profile>
+      <!-- Because we use 5.5 ES client, by default we do not activate 6.x
+           ES testing profile. -->
+      <id>ES-API-5.x</id>
+      <activation>
+        <property>
+          <name>!tests.elasticsearch.api.using6x</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>reserve-elasticsearch-ports</id>
+                <goals>
+                  <goal>reserve-network-port</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <!-- Always use non-overlapping ranges in each pom to avoid port conflict -->
+                  <minPortNumber>18000</minPortNumber>
+                  <maxPortNumber>18999</maxPortNumber>
+                  <portNames>
+                    <portName>tests.elasticsearch.transportPort</portName>
+                    <portName>tests.elasticsearch.httpPort</portName>
+                  </portNames>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.alexcojocaru</groupId>
+            <artifactId>elasticsearch-maven-plugin</artifactId>
+            <version>${tests.elasticsearch.mvn.plugin.version}</version>
+            <configuration>
+              <version>${tests.elasticsearch.api.version}</version>
+              <clusterName>test</clusterName>
+              <transportPort>${tests.elasticsearch.transportPort}</transportPort>
+              <httpPort>${tests.elasticsearch.httpPort}</httpPort>
+              <skip>${tests.elasticsearch.api.on}</skip>
+              <instanceCount>1</instanceCount>
+              <instanceSettings>
+                <properties>
+                  <script.max_compilations_per_minute>1000</script.max_compilations_per_minute>
+                </properties>
+              </instanceSettings>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-elasticsearch5</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>runforked</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-elasticsearch5</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- Activate this profile using
+           -Dtests.elasticsearch.api.using6x -->
+      <id>ES-API-6.x</id>
+      <activation>
+        <property>
+          <name>tests.elasticsearch.api.using6x</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>reserve-elasticsearch-ports</id>
+                <goals>
+                  <goal>reserve-network-port</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <!-- Always use non-overlapping ranges in each pom to avoid port conflict -->
+                  <minPortNumber>19000</minPortNumber>
+                  <maxPortNumber>19999</maxPortNumber>
+                  <portNames>
+                    <portName>tests.elasticsearch.transportPort</portName>
+                    <portName>tests.elasticsearch.httpPort</portName>
+                  </portNames>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.alexcojocaru</groupId>
+            <artifactId>elasticsearch-maven-plugin</artifactId>
+            <version>${tests.elasticsearch.mvn.plugin.version}</version>
+            <configuration>
+              <version>${tests.elasticsearch.api.version}</version>
+              <clusterName>test</clusterName>
+              <transportPort>${tests.elasticsearch.transportPort}</transportPort>
+              <httpPort>${tests.elasticsearch.httpPort}</httpPort>
+              <skip>${tests.elasticsearch.api.on}</skip>
+              <instanceCount>1</instanceCount>
+              <instanceSettings>
+                <properties>
+                  <script.max_compilations_rate>1000/1m</script.max_compilations_rate>
+                </properties>
+              </instanceSettings>
+            </configuration>
+            <executions>
+              <execution>
+                <id>start-elasticsearch6</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>runforked</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>stop-elasticsearch6</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>elasticsearch-maven-plugin</id>
+      <activation>
+        <property>
+          <!--  disable elastic search plugin if skipTests is set -->
+          <name>skipTests</name>
+        </property>
+      </activation>
+      <properties>
+        <tests.elasticsearch.api.on>true</tests.elasticsearch.api.on>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <parallel>suites</parallel>
+          <perCoreThreadCount>false</perCoreThreadCount>
+          <threadCount>1</threadCount>
+          <forkCount>1</forkCount>
+          <argLine>
+            -Xms512m
+            -Xmx3g
+            -Xss2048k
+            -Djava.net.preferIPv4Stack=true"
+            -XX:MaxDirectMemorySize=3072M
+            -XX:+CMSClassUnloadingEnabled
+            -ea
+            @{argLine}
+          </argLine>
+          <systemProperties>
+            <dremio.test.elasticsearch.port>${tests.elasticsearch.httpPort}</dremio.test.elasticsearch.port>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <forkCount>1</forkCount>
+          <argLine>-Xmx1024m @{argLine}</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

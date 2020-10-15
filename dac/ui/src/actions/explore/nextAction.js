@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 import { toggleExploreSql } from 'actions/explore/ui';
-import { openTableau, openQlikSense, openPowerBI } from 'actions/explore/download';
+import { openTableau, openQlikSense, openPowerBI, openDavinci } from 'actions/explore/download';
 
 export const NEXT_ACTIONS = {
   toggleSql: 'TOGGLE_SQL',
   openTableau: 'OPEN_TABLEAU',
   openQlik: 'OPEN_QLIK_AFTER',
+  openDavinci: 'OPEN_DAVINCI_AFTER',
   openPowerBI: 'OPEN_POWER_BI'
 };
 
@@ -33,6 +34,8 @@ export const performNextAction = (dataset, nextAction) => {
     return openQlikSense(dataset);
   case NEXT_ACTIONS.openPowerBI:
     return openPowerBI(dataset);
+  case NEXT_ACTIONS.openDavinci:
+    return openDavinci(dataset);
   default:
     console.error('Unknown next action', nextAction);
     return {type: 'NOP'};

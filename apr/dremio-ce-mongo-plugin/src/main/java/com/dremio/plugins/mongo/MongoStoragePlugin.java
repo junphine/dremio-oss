@@ -12,7 +12,6 @@ import java.util.stream.*;
 import com.dremio.plugins.mongo.metadata.*;
 import com.google.common.annotations.*;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.dremio.service.namespace.capabilities.*;
 
 import com.dremio.exec.planner.sql.*;
@@ -24,7 +23,7 @@ import com.dremio.exec.planner.logical.*;
 import org.apache.arrow.vector.types.*;
 import org.apache.arrow.vector.types.pojo.*;
 import java.util.*;
-
+import com.google.common.collect.*;
 
 public class MongoStoragePlugin implements StoragePlugin, SupportsListingDatasets
 {
@@ -140,15 +139,15 @@ public class MongoStoragePlugin implements StoragePlugin, SupportsListingDataset
         try {
             final MongoVersion probeVersion = this.manager.validateConnection();
             if (probeVersion.enableNewFeatures() != this.version.enableNewFeatures()) {
-                return SourceState.badState(new String[] { "Mongo software version was modified at level that Dremio needs restart (one or more nodes moved across the 3.2.0 version horizon)." });
+                return SourceState.badState("Dremio needs to be restarted due to differences in the Mongo software version.", new String[] { "Mongo software version was modified at level that requires Dremio to be restarted (one or more nodes moved across the 3.2.0 version horizon)." });
             }
             if (probeVersion.enableNewFeatures()) {
-                return new SourceState(SourceState.SourceStatus.good, Collections.singletonList(probeVersion.getVersionInfo()));
+                return new SourceState(SourceState.SourceStatus.good, "", Collections.singletonList(probeVersion.getVersionInfo()));
             }
-            return new SourceState(SourceState.SourceStatus.warn, Collections.singletonList(probeVersion.getVersionWarning()));
+            return new SourceState(SourceState.SourceStatus.warn, "", Collections.singletonList(probeVersion.getVersionWarning()));
         }
         catch (Exception e) {
-            return SourceState.badState(e);
+            return SourceState.badState("Could not connect to MongoDB host. Check your MongoDB database credentials and network settings", e);
         }
     }
     

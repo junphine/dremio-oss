@@ -27,7 +27,8 @@ export const getAnalyzeToolsConfig = (settings, config) => {
     return {
       tableau: {enabled: settings.getIn([CLIENT_TOOL_ID.tableau, 'value'])},
       powerbi: {enabled: settings.getIn([CLIENT_TOOL_ID.powerbi, 'value'])},
-      qlik: {enabled: settings.getIn([CLIENT_TOOL_ID.qlik, 'value'])}
+      qlik: {enabled: settings.getIn([CLIENT_TOOL_ID.qlik, 'value'])},
+      davinci: {enabled: settings.getIn([CLIENT_TOOL_ID.davinci, 'value'])}
     };
   } else {
     return config.analyzeTools;
@@ -61,8 +62,11 @@ export default { // defaults, and defaults for unit tests
   analyzeTools: {
     tableau: { enabled: true },
     powerbi: { enabled: true },
-    qlik: { enabled: false }
+    davinci: { enabled: true },
+    qlik: { enabled: true }
   },
+  tdsMimeType: 'application/tds',
+  davinciUrl: 'http://127.0.0.1:5002/#/project/2',
   crossSourceDisabled: false,
   ...((window && window.dremioConfig) || {})
 };

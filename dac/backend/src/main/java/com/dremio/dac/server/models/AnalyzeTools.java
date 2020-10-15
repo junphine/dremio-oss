@@ -15,6 +15,7 @@
  */
 package com.dremio.dac.server.models;
 
+import com.dremio.dac.explore.bi.DavinciResource;
 import com.dremio.dac.explore.bi.QlikResource;
 import com.dremio.dac.resource.PowerBIResource;
 import com.dremio.dac.resource.TableauResource;
@@ -28,12 +29,14 @@ public final class AnalyzeTools {
   private final BITool tableau;
   private final BITool powerbi;
   private final BITool qlik;
+  private final BITool davinci;
 
   @JsonCreator
-  private AnalyzeTools(BITool tableau, BITool powerbi, BITool qlik) {
+  private AnalyzeTools(BITool tableau, BITool powerbi, BITool qlik,BITool davinci) {
     this.tableau = tableau;
     this.powerbi = powerbi;
     this.qlik = qlik;
+    this.davinci = davinci;
   }
 
   public BITool getTableau() {
@@ -48,11 +51,16 @@ public final class AnalyzeTools {
     return qlik;
   }
 
+  public BITool getDavinci() {
+    return davinci;
+  }
+
   public static AnalyzeTools from(OptionManager optionManager) {
     return new AnalyzeTools(
       new BITool(optionManager.getOption(TableauResource.CLIENT_TOOLS_TABLEAU)),
       new BITool(optionManager.getOption(PowerBIResource.CLIENT_TOOLS_POWERBI)),
-      new BITool(optionManager.getOption(QlikResource.CLIENT_TOOLS_QLIK))
+      new BITool(optionManager.getOption(QlikResource.CLIENT_TOOLS_QLIK)),
+      new BITool(optionManager.getOption(DavinciResource.CLIENT_TOOLS_DAVINCI))
     );
   }
 

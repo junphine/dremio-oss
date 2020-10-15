@@ -24,6 +24,7 @@ export default class AnalyzeMenuItems extends Component {
     openTableau: PropTypes.func,
     openQlikSense: PropTypes.func,
     openPowerBI: PropTypes.func,
+    openDavinci: PropTypes.func,
     analyzeToolsConfig: PropTypes.object
   };
 
@@ -44,6 +45,11 @@ export default class AnalyzeMenuItems extends Component {
         {analyzeToolsConfig.qlik.enabled &&
         <MenuItem onClick={this.props.openQlikSense}>
           <FormattedMessage id='Dataset.QlikSense'/>
+        </MenuItem>
+        }
+        {analyzeToolsConfig.davinci.enabled &&
+        <MenuItem onClick={this.props.openDavinci}>
+          <FormattedMessage id='Davinci'/>
         </MenuItem>
         }
       </div>

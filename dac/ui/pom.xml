@@ -108,6 +108,7 @@
         <artifactId>frontend-maven-plugin</artifactId>
 
         <configuration>
+          <skip>true</skip>
           <workingDirectory>${project.basedir}</workingDirectory>
           <environmentVariables>
             <NPM_CONFIG_REGISTRY>${npm.registry.url}</NPM_CONFIG_REGISTRY>
@@ -121,6 +122,16 @@
         </configuration>
 
         <executions>
+	        <execution>
+	            <phase>prepare-package</phase>
+	            <id>install node and npm</id>
+	            <goals>
+	                <goal>install-node-and-npm</goal>
+	            </goals>
+	            <configuration>              
+	              <skip>true</skip>
+	            </configuration>
+	        </execution>
           <execution>
             <id>npm install</id>
             <phase>initialize</phase>
@@ -131,6 +142,7 @@
               command -->
             <configuration>
               <arguments>install --no-save</arguments>
+              <skip>true</skip>
             </configuration>
           </execution>
 
@@ -165,6 +177,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
+              <skip>true</skip>
               <arguments>run ${npm.buildscript} -- --output-path=${project.build.outputDirectory}/rest/dremio_static</arguments>
             </configuration>
           </execution>

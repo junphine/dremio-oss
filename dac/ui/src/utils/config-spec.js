@@ -24,13 +24,15 @@ describe('getAnalyzeToolsConfig', () => {
     settings = Immutable.fromJS({
       'client.tools.tableau': { value: true },
       'client.tools.powerbi': { value: true },
-      'client.tools.qlik': { value: false }
+      'client.tools.qlik': { value: false },
+      'client.tools.davinci': { value: true }
     });
     config = {
       analyzeTools: {
         tableau: { enabled: false },
         powerbi: { enabled: true },
-        qlik: { enabled: false }
+        qlik: { enabled: false },
+        davinci: { enabled: true }
       }
     };
   });

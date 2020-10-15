@@ -23,6 +23,7 @@ import { hideConfirmationDialog, showConfirmationDialog } from 'actions/confirma
 import FileUtils from '@app/utils/FileUtils';
 import config from 'dyn-load/utils/config';
 import jobsUtils from 'utils/jobsUtils';
+import apiUtils from '@app/utils/apiUtils/apiUtils';
 
 export const START_DATASET_DOWNLOAD = 'START_DATASET_DOWNLOAD';
 
@@ -111,6 +112,58 @@ export const openQlikSense = (dataset) => {
 export const LOAD_QLIK_APP_START   = 'LOAD_QLIK_APP_START';
 export const LOAD_QLIK_APP_SUCCESS = 'LOAD_QLIK_APP_SUCCESS';
 export const LOAD_QLIK_APP_FAILURE = 'LOAD_QLIK_APP_FAILURE';
+
+
+export const OPEN_DAVINCI = 'OPEN_DAVINCI';
+/**
+ * Triggers davinci saga
+ * @param dataset
+ */
+export const openDavinci = (dataset) => {
+  return (dispatch) => {
+    if (needsSaveBeforeBI(dataset)) {
+      return dispatch(saveAsDataset('OPEN_DAVINCI_AFTER'));
+    }
+
+    const href = `/davinci/${FileUtils.getDatasetIdForClientTools(dataset)}`;
+    return dispatch(downloadPowerBI({ href }))
+      .then((response) => {
+        if (!response.error) {          
+          //FileUtils.downloadFile(response.payload);
+          const reader = new FileReader();
+          reader.readAsText(response.payload.blob, 'utf-8');
+          reader.onload = function (e) {
+        	console.info(reader.result);
+        	const payload = JSON.parse(reader.result);
+        	const address = payload.connections[0].details.address;
+            const schema = address.schema;
+            const table = address.object;                     
+            const href = config.davinciUrl + 'dremio/'+ address.server+'/'+schema+'/'+table;
+            //const post = apiUtils.fetch(href);
+            //const w = window.open(href); 
+            
+            const currentJobLink = <a href={href} target="blank">{la('Go to Vaninci BI Tools')}</a>;
+	        return dispatch(
+	            showConfirmationDialog({
+	              title: la('Preparing BI Tools…'),
+	              confirm: () => window.open(href),
+	              showOnlyConfirm: false,
+	              confirmText: la('Go'),
+	              text: [
+	                <span>{la('Your will go Vaninci web BI tool when ready.')}</span>,
+	                currentJobLink
+	              ]
+	            })
+	           );
+          }
+          
+        }
+        else{
+        	
+        }
+      });
+  };
+};
 
 export const downloadTableau = ({ href }) => (dispatch) => dispatch(fetchDownloadTableau({ href }));
 

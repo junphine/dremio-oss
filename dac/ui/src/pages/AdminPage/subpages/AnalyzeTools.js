@@ -21,6 +21,7 @@ import Immutable from 'immutable';
 export const RESERVED = [
   CLIENT_TOOL_ID.powerbi,
   CLIENT_TOOL_ID.tableau,
+  CLIENT_TOOL_ID.davinci,
   CLIENT_TOOL_ID.qlik
 ];
 
@@ -37,6 +38,7 @@ const AnalyzeTools = (props) => {
   };
 
   const qlikEnabled = props.settings.get(CLIENT_TOOL_ID.qlikEnabled);
+  const davinciEnabled = props.settings.get(CLIENT_TOOL_ID.davinciEnabled);
 
   return (
     <div style={{padding: '10px 0 20px', borderBottom: '1px solid hsla(0, 0%, 0%, 0.1)'}}>
@@ -49,6 +51,7 @@ const AnalyzeTools = (props) => {
         {renderTool(CLIENT_TOOL_ID.tableau, 'Tableau:', 'Tableau.svg')}
         {renderTool(CLIENT_TOOL_ID.powerbi, 'Power BI:', 'PowerBi.svg')}
         {qlikEnabled && qlikEnabled.get('value') && renderTool(CLIENT_TOOL_ID.qlik, 'Qlik:', 'Qlik.svg')}
+        {davinciEnabled && davinciEnabled.get('value') && renderTool(CLIENT_TOOL_ID.davinci, 'Davinci:', 'Davinci.svg')}
       </div>
     </div>
   );

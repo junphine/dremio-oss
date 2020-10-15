@@ -1,7 +1,0 @@
-[
-  {"sourceType": "HBASE", "tags": ["community"]},
-  {"sourceType": "TERADATA", "tags": ["beta"]},
-  {"sourceType": "CASSANDRA", "disabled": true},
-  {"sourceType": "SALESFORCE", "disabled": true},
-  {"sourceType": "NETEZZA", "disabled": true}
-]

@@ -21,12 +21,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.dremio.plugin</groupId>
-  <version>4.7.3-202008270723550726-918276ee</version>
+  <version>4.8.0-202009180238090394-b0a98b73</version>
   <artifactId>dremio-ignite-plugin</artifactId>
   <name>Dremio Ignite Community Connector</name>
 
   <properties>
-    <version.dremio>4.7.3-202008270723550726-918276ee</version.dremio>
+    <version.dremio>4.8.0-202009180238090394-b0a98b73</version.dremio>
   </properties>
 
   <dependencies>

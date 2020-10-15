@@ -122,7 +122,8 @@ export class ExplorePageView extends Component<ExplorePageViewProps, ExplorePage
         <HistoryLineController
           dataset={dataset}
           location={this.props.location}
-          ref='historyLine'
+          ref='historyLine' //@modify@byron
+          //historyItems = 'historyLine'
         />
       </div>
     );

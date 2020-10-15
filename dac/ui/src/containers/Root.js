@@ -30,7 +30,7 @@ import enData from 'react-intl/locale-data/en';
 import zhData from 'react-intl/locale-data/zh';
 import { getLocale } from '../utils/locale';
 
-addLocaleData([...enData,...zhData]);
+addLocaleData([...enData, ...zhData]);
 
 export default class Root extends Component {
 
