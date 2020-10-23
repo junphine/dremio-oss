@@ -66,7 +66,7 @@ export default { // defaults, and defaults for unit tests
     qlik: { enabled: true }
   },
   tdsMimeType: 'application/tds',
-  davinciUrl: 'http://127.0.0.1:5002/#/project/2',
+  davinciUrl: 'http://127.0.0.1:8080/#/project/1/views',
   crossSourceDisabled: false,
   ...((window && window.dremioConfig) || {})
 };

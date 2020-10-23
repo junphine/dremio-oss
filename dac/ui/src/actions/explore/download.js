@@ -138,7 +138,7 @@ export const openDavinci = (dataset) => {
         	const address = payload.connections[0].details.address;
             const schema = address.schema;
             const table = address.object;                     
-            const href = config.davinciUrl + 'dremio/'+ address.server+'/'+schema+'/'+table;
+            const href = config.davinciUrl + '?q=dremio/'+ address.server+'/'+schema+'/'+table;
             //const post = apiUtils.fetch(href);
             //const w = window.open(href); 
             

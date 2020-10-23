@@ -380,7 +380,7 @@ public class LdapUserService extends LdapProfileService implements UserService {
 	@Override
 	public Iterable<? extends User> searchUsers(String searchTerm, String sortColumn, SortOrder order, Integer limit)
 			throws IOException {
-		limit = limit == null ? 10000 : limit;
+		limit = limit == null ? 1000 : limit;
 
 		if (searchTerm == null || searchTerm.isEmpty()) {
 			return getAllUsers(limit);
@@ -388,7 +388,7 @@ public class LdapUserService extends LdapProfileService implements UserService {
 
 		SearchFilter searchFitler = new SearchFilter();
 
-		searchFitler.setFilter("|(cn=" + searchTerm + "*)"+"(email=" + searchTerm + "*)");
+		searchFitler.setFilter("|(cn=" + searchTerm + "*)"+"(mail=" + searchTerm + "*)"+"(givenName=" + searchTerm + "*)"+"(sn=" + searchTerm + "*)");
 
 		Iterable<? extends User> list = Iterables.transform(search(searchFitler, limit), infoConfigTransformer);
 		return list;
@@ -424,19 +424,7 @@ public class LdapUserService extends LdapProfileService implements UserService {
 		}
 		return userAuth;
 	}
-
-	private byte[] buildUserAuthKey(final String authKey, final byte[] prefix) throws InvalidKeySpecException {
-		final PBEKeySpec spec = new PBEKeySpec(authKey.toCharArray(), prefix, 65536, 128);
-		return secretKey.generateSecret(spec).getEncoded();
-	}
-
-	private boolean slowEquals(byte[] a, byte[] b) {
-		int diff = a.length ^ b.length;
-		for (int i = 0; i < a.length && i < b.length; i++) {
-			diff |= a[i] ^ b[i];
-		}
-		return diff == 0;
-	}
+	
 
 	/**
 	 * Used only by command line for set-password

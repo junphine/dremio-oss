@@ -32,11 +32,14 @@ export function getLocale() {
   try {
     if (localStorage.getItem('language')) {
       if (localStorage.getItem('language') === 'ids') {
-        localeStrings = undefined;
+        //localeStrings = undefined;
+        return { language: 'ids', localeStrings: {} };
       } else if (localStorage.getItem('language') === 'double') {
+    	localeIdStrings = {}
         for (const [key, value] of Object.entries(localeStrings)) {
-          localeStrings[key] = key + ' ' + value;
+          localeIdStrings[key] = key + ' ' + value;
         }
+    	return { language: 'double', localeStrings: localeIdStrings };
       } else {
         language = localStorage.getItem('language');
         if (language in messages) {
@@ -55,8 +58,9 @@ export function getLocale() {
 }
 
 export function formatMessage(message, values) {
-  const local = getLocale();
-  const msg = new IntlMessageFormat(local.localeStrings[message], local.language);
+  if(!formatMessage.local)
+	  formatMessage.local = getLocale();
+  const msg = new IntlMessageFormat(formatMessage.local.localeStrings[message], formatMessage.local.language);
   // todo: write code to actually handle multiple options
   return msg.format(values);
 }

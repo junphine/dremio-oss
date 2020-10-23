@@ -72,6 +72,7 @@
                 <resource>
                   <directory>${project.basedir}</directory>
                   <excludes>
+                    <exclude>rest/**</exclude>
                     <exclude>build/**</exclude>
                     <exclude>node_modules/**</exclude>
                     <exclude>src/main/resources/**</exclude>
@@ -103,12 +104,15 @@
           </execution>
         </executions>
       </plugin>
+     
       <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+    	<artifactId>exec-maven-plugin</artifactId>
+    	<version>1.6.0</version>
 
         <configuration>
-          <skip>true</skip>
+          <skip>false</skip>
+          <executable>env</executable>
           <workingDirectory>${project.basedir}</workingDirectory>
           <environmentVariables>
             <NPM_CONFIG_REGISTRY>${npm.registry.url}</NPM_CONFIG_REGISTRY>
@@ -122,67 +126,20 @@
         </configuration>
 
         <executions>
-	        <execution>
-	            <phase>prepare-package</phase>
-	            <id>install node and npm</id>
-	            <goals>
-	                <goal>install-node-and-npm</goal>
-	            </goals>
-	            <configuration>              
-	              <skip>true</skip>
-	            </configuration>
-	        </execution>
-          <execution>
-            <id>npm install</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <!-- Optional configuration which provides for running any npm
-              command -->
-            <configuration>
-              <arguments>install --no-save</arguments>
-              <skip>true</skip>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>run js linter and unit tests</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run test:only -- --reporter mocha-junit-reporter --reporter-options mochaFile=${project.build.directory}/mocha-reports/test-results.xml,testsuitesTitle=dac-ui</arguments>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>make sure there is no outdated/GPL OSS</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run report:oss -- --no-write</arguments>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-
           <execution>
             <id>build minimized webpack bundle</id>
             <phase>generate-resources</phase>
             <goals>
-              <goal>npm</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <skip>true</skip>
-              <arguments>run ${npm.buildscript} -- --output-path=${project.build.outputDirectory}/rest/dremio_static</arguments>
+            	<executable>cnpm</executable>             
+              	<commandlineArgs>run ${npm.buildscript} -- --output-path=${project.build.outputDirectory}/rest/dremio_static</commandlineArgs>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      
     </plugins>
   </build>
 
