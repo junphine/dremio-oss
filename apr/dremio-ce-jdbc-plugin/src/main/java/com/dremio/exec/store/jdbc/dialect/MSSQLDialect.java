@@ -40,8 +40,9 @@ public class MSSQLDialect extends ArpDialect
             private static final long serialVersionUID = 1L;
             
             public void unparse(final SqlWriter writer, final int leftPrec, final int rightPrec) {
+            	//add@byron
                 writer.keyword("COLLATE");
-                writer.keyword("Latin1_General_BIN2");
+                writer.keyword("Chinese_PRC_CI_AS");
             }
         };
     }
@@ -188,7 +189,7 @@ public class MSSQLDialect extends ArpDialect
     }
     
     static {
-        SUPPORTED_WINDOW_AGG_CALLS = (Set)ImmutableSet.of(SqlStdOperatorTable.COUNT, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
+        SUPPORTED_WINDOW_AGG_CALLS = ImmutableSet.of(SqlStdOperatorTable.COUNT, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
         DISABLE_PUSH_COLLATION = Boolean.getBoolean("dremio.jdbc.mssql.push-collation.disable");
     }
     

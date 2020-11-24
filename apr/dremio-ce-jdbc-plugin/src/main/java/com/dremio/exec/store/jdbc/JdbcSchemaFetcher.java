@@ -69,7 +69,7 @@ public class JdbcSchemaFetcher
             return (DatasetHandleListing)new EmptyDatasetHandleListing();
         }
         JdbcSchemaFetcher.logger.debug("Getting all tables for plugin '{}'", this.storagePluginName);
-        return (DatasetHandleListing)new JdbcIteratorListing((Iterator)new JdbcDatasetMetadataIterable(this.storagePluginName, this.dataSource, this.config));
+        return new JdbcIteratorListing<>(new JdbcDatasetMetadataIterable(this.storagePluginName, this.dataSource, this.config));
     }
     
     public Optional<DatasetHandle> getTableHandle(final List<String> tableSchemaPath) {

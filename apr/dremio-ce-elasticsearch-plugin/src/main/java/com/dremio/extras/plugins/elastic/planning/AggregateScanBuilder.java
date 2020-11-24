@@ -40,11 +40,11 @@ class AggregateScanBuilder extends ScanBuilder
     private BatchSchema schema;
     
     public GroupScan<SplitWork> toGroupScan(final OpProps props, final long estimatedRowCount) {
-        return (GroupScan<SplitWork>)new ElasticsearchAggregatorGroupScan(props, this.getScan().getTableMetadata(), this.aggregates, this.getSpec(), estimatedRowCount, this.schema);
+        return new ElasticsearchAggregatorGroupScan(props, this.getScan().getTableMetadata(), this.aggregates, this.getSpec(), estimatedRowCount, this.schema);
     }
     
     public List<SchemaPath> getColumns() {
-        return (List<SchemaPath>)GroupScan.ALL_COLUMNS;
+        return GroupScan.ALL_COLUMNS;
     }
     
     private Map<Class<?>, ElasticsearchPrel> validate(final List<ElasticsearchPrel> stack) {
@@ -82,7 +82,7 @@ class AggregateScanBuilder extends ScanBuilder
                 throw new IllegalStateException(String.format("Stack should 2..4 in size, was %d in size.", stack.size()));
             }
         }
-        return (Map<Class<?>, ElasticsearchPrel>)ImmutableMap.copyOf((Map)map);
+        return ImmutableMap.copyOf(map);
     }
     
     private static List<ProjectResult> getProjectOutcome(final ElasticsearchProject project, final ElasticIntermediateScanPrel scan, final FunctionLookupContext lookupContext) {
@@ -91,14 +91,14 @@ class AggregateScanBuilder extends ScanBuilder
         List<String> outputNames;
         if (project != null) {
             schema = project.getSchema(lookupContext);
-            nodes = (List<RexNode>)project.getChildExps();
-            outputNames = (List<String>)project.getRowType().getFieldNames();
+            nodes = project.getChildExps();
+            outputNames = project.getRowType().getFieldNames();
             final RelDataType inputRowType = project.getInput().getRowType();
         }
         else {
             schema = scan.getSchema(lookupContext);
             nodes = new ArrayList<RexNode>();
-            outputNames = (List<String>)scan.getRowType().getFieldNames();
+            outputNames = scan.getRowType().getFieldNames();
             final RelDataType inputRowType = null;
             int i = 0;
             for (final RelDataTypeField f : scan.getRowType().getFieldList()) {
@@ -108,7 +108,7 @@ class AggregateScanBuilder extends ScanBuilder
         }
         final StoragePluginId pluginId = scan.getPluginId();
         final boolean supportsV5Features = pluginId.getCapabilities().getCapability(ElasticsearchStoragePlugin.ENABLE_V5_FEATURES);
-        return (List<ProjectResult>)FluentIterable.from((Iterable)nodes).transform((Function)new Function<RexNode, ProjectResult>() {
+        return FluentIterable.from(nodes).transform(new Function<RexNode, ProjectResult>() {
             private int i = 0;
             
             public ProjectResult apply(final RexNode original) {
@@ -158,7 +158,7 @@ class AggregateScanBuilder extends ScanBuilder
             this.aggregates = this.applyAggregation(searchRequest, scan, aggregate, project, functionLookupContext);
             this.schema = aggregate.getSchema(functionLookupContext);
             searchRequest.setSize(0);
-            final ElasticsearchScanSpec scanSpec = new ElasticsearchScanSpec(tableAttributes.getResource(), searchRequest.toString(), ElasticsearchConf.createElasticsearchConf((BaseElasticStoragePluginConfig)scan.getPluginId().getConnectionConf()).getScrollSize(), true);
+            final ElasticsearchScanSpec scanSpec = new ElasticsearchScanSpec(tableAttributes.getResource(), searchRequest.toString(), ElasticsearchConf.createElasticsearchConf(scan.getPluginId().getConnectionConf()).getScrollSize(), true);
             this.setSpec(scanSpec);
             this.setScan(scan);
         }
@@ -221,28 +221,28 @@ class AggregateScanBuilder extends ScanBuilder
                     case "SUM":
                     case "$SUM0": {
                         if (result2.isRequiresScript()) {
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.sum(outputName).script(result2.getScript());
+                            aggBuilder = AggregationBuilders.sum(outputName).script(result2.getScript());
                             break;
                         }
-                        aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.sum(outputName).field(result2.getReference());
+                        aggBuilder = AggregationBuilders.sum(outputName).field(result2.getReference());
                         break;
                     }
                     case "COUNT": {
                         if (aggCall.isDistinct()) {
                             if (result2.isRequiresScript()) {
-                                aggBuilder = (AbstractAggregationBuilder)((CardinalityAggregationBuilder)AggregationBuilders.cardinality(outputName).script(result2.getScript())).precisionThreshold(40000L);
+                                aggBuilder = ((CardinalityAggregationBuilder)AggregationBuilders.cardinality(outputName).script(result2.getScript())).precisionThreshold(40000L);
                                 break;
                             }
-                            aggBuilder = (AbstractAggregationBuilder)((CardinalityAggregationBuilder)AggregationBuilders.cardinality(outputName).field(result2.getReference())).precisionThreshold(40000L);
+                            aggBuilder = ((CardinalityAggregationBuilder)AggregationBuilders.cardinality(outputName).field(result2.getReference())).precisionThreshold(40000L);
                             break;
                         }
                         else {
                             if (result2.isRequiresScript()) {
-                                aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.count(outputName).script(result2.getScript());
+                                aggBuilder = AggregationBuilders.count(outputName).script(result2.getScript());
                                 break;
                             }
                             if (result2.isSingleLevelReference()) {
-                                aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.count(outputName).field(result2.getReference());
+                                aggBuilder = AggregationBuilders.count(outputName).field(result2.getReference());
                                 break;
                             }
                             if (!enableScripts) {
@@ -250,33 +250,33 @@ class AggregateScanBuilder extends ScanBuilder
                             }
                             final String src = isPainless ? "params._source" : "_source";
                             final String scriptText = "((" + src + "." + result2.getReference() + " == null) ? null : 1)";
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.count(outputName).script(PredicateAnalyzer.getScript(scriptText, scan.getPluginId()));
+                            aggBuilder = AggregationBuilders.count(outputName).script(PredicateAnalyzer.getScript(scriptText, scan.getPluginId()));
                             break;
                         }
                         //-break;
                     }
                     case "AVG": {
                         if (result2.isRequiresScript()) {
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.avg(outputName).script(result2.getScript());
+                            aggBuilder = AggregationBuilders.avg(outputName).script(result2.getScript());
                             break;
                         }
-                        aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.avg(outputName).field(result2.getReference());
+                        aggBuilder = AggregationBuilders.avg(outputName).field(result2.getReference());
                         break;
                     }
                     case "MAX": {
                         if (result2.isRequiresScript()) {
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.max(outputName).script(result2.getScript());
+                            aggBuilder = AggregationBuilders.max(outputName).script(result2.getScript());
                             break;
                         }
-                        aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.max(outputName).field(result2.getReference());
+                        aggBuilder = AggregationBuilders.max(outputName).field(result2.getReference());
                         break;
                     }
                     case "MIN": {
                         if (result2.isRequiresScript()) {
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.min(outputName).script(result2.getScript());
+                            aggBuilder = AggregationBuilders.min(outputName).script(result2.getScript());
                             break;
                         }
-                        aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.min(outputName).field(result2.getReference());
+                        aggBuilder = AggregationBuilders.min(outputName).field(result2.getReference());
                         break;
                     }
                     case "STDDEV":
@@ -286,10 +286,10 @@ class AggregateScanBuilder extends ScanBuilder
                     case "VAR_POP":
                     case "VAR_SAMP": {
                         if (result2.isRequiresScript()) {
-                            aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.extendedStats(outputName).script(result2.getScript());
+                            aggBuilder = AggregationBuilders.extendedStats(outputName).script(result2.getScript());
                             break;
                         }
-                        aggBuilder = (AbstractAggregationBuilder)AggregationBuilders.extendedStats(outputName).field(result2.getReference());
+                        aggBuilder = AggregationBuilders.extendedStats(outputName).field(result2.getReference());
                         break;
                     }
                     default: {
@@ -364,7 +364,7 @@ class AggregateScanBuilder extends ScanBuilder
                 segments.add(segment.getPath());
                 final PathSegment child = segment.getChild();
                 if (child == null) {
-                    return AggregateScanBuilder.DOT.join((Iterable)segments);
+                    return AggregateScanBuilder.DOT.join(segments);
                 }
                 if (child.isArray()) {
                     throw UserException.validationError().message("Attempted to aggregate %s which includes array indices.", new Object[] { this.reference.getAsUnescapedPath() }).build(AggregateScanBuilder.logger);

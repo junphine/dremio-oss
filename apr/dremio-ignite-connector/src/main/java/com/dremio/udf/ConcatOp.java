@@ -18,10 +18,12 @@ package com.dremio.udf;
 import javax.inject.Inject;
 
 import org.apache.arrow.memory.ArrowBuf;
+import org.apache.arrow.vector.holders.NullableVarCharHolder;
 import org.apache.arrow.vector.holders.VarCharHolder;
 
 import com.dremio.exec.expr.SimpleFunction;
 import com.dremio.exec.expr.annotations.FunctionTemplate;
+import com.dremio.exec.expr.annotations.FunctionTemplate.FunctionScope;
 import com.dremio.exec.expr.annotations.FunctionTemplate.NullHandling;
 import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
@@ -30,14 +32,15 @@ import com.dremio.exec.expr.annotations.Param;
 
 @FunctionTemplate(
     name = "example_concat_op",
+    scope = FunctionScope.SIMPLE,
     nulls = NullHandling.NULL_IF_NULL)
 public class ConcatOp implements SimpleFunction {
 
   @Inject ArrowBuf buffer;
 
-  @Param public VarCharHolder left;
-  @Param public VarCharHolder right;
-  @Output public VarCharHolder out;
+  @Param public NullableVarCharHolder left;
+  @Param public NullableVarCharHolder right;
+  @Output public NullableVarCharHolder out;
 
   @Override
   public void setup() {
@@ -45,15 +48,30 @@ public class ConcatOp implements SimpleFunction {
 
   @Override
   public void eval() {
-    final int bytesLeftArg = left.end - left.start;
-    final int bytesRightArg = right.end - right.start;
-    final int finalLength = bytesLeftArg + bytesRightArg;
-
-    out.buffer = buffer = buffer.reallocIfNeeded(finalLength);
-    out.start = 0;
-    out.end = finalLength;
-
-    left.buffer.getBytes(left.start, out.buffer, 0, bytesLeftArg);
-    right.buffer.getBytes(right.start, out.buffer, bytesLeftArg, bytesRightArg);
+	if(left.isSet==0 && right.isSet==0) {
+		return;
+	}
+	else if(left.isSet==0) {
+		out.buffer = buffer = right.buffer;
+	    out.start = right.start;
+	    out.end = right.end;
+	}
+	else if(right.isSet==0) {
+		out.buffer = buffer = left.buffer;
+	    out.start = left.start;
+	    out.end = left.end;
+	}
+	else {
+	    final int bytesLeftArg = left.end - left.start;
+	    final int bytesRightArg = right.end - right.start;
+	    final int finalLength = bytesLeftArg + bytesRightArg;
+	
+	    out.buffer = buffer = buffer.reallocIfNeeded(finalLength);
+	    out.start = 0;
+	    out.end = finalLength;
+	
+	    left.buffer.getBytes(left.start, out.buffer, 0, bytesLeftArg);
+	    right.buffer.getBytes(right.start, out.buffer, bytesLeftArg, bytesRightArg);
+	}
   }
 }

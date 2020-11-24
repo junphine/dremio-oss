@@ -18,7 +18,9 @@ import config from 'dyn-load/utils/config';
 // todo: loc - all this one-off custom loc stuff needs tearing out and replacing
 
 const languageHash = {
-  'en': 'dataEN'
+  'en': 'dataEN',
+  'zh': 'dataZH',
+  'zh-CN': 'dataZH'
 };
 
 let languages = {};

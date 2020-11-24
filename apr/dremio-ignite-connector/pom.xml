@@ -64,6 +64,33 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      
+      <plugin> <!-- source file must end up in the jar for janino parsing -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          
+          <execution>
+            <id>copy-sources-as-resources</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/main/java</directory>
+                  <includes>                    
+                    <include>com/dremio/udf/**.java</include>
+                  </includes>
+                </resource>                
+              </resources>
+            </configuration>
+          </execution>
+          
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

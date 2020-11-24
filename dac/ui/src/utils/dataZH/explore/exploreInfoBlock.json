@@ -1,0 +1,26 @@
+[
+  {
+    "name": "分享",
+    "id": "分享",
+    "values": ["22 people", "12 groups"],
+    "style": {
+      "fontWeight": "粗体"
+    }
+  },
+  {
+    "id": "加速器",
+    "name": "加速器",
+    "values": ["启用"],
+    "style": {
+      "fontWeight": "粗体"
+    }
+  },
+  {
+    "id": "导出",
+    "name": "上一次导出",
+    "values": ["2小时前"],
+    "style": {
+      "fontWeight": "粗体"
+    }
+  }
+]

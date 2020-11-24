@@ -21,26 +21,26 @@ public class ElasticAggregatorScanCreator implements ProducerOperator.Creator<El
 {
     public ProducerOperator create(final FragmentExecutionContext fec, final OperatorContext context, final ElasticsearchAggregatorSubScan subScan) throws ExecutionSetupException {
         try {
-            final ElasticsearchStoragePlugin plugin = (ElasticsearchStoragePlugin)fec.getStoragePlugin(subScan.getPluginId());
+            final ElasticsearchStoragePlugin plugin = fec.getStoragePlugin(subScan.getPluginId());
             final List<RecordReader> readers = new ArrayList<RecordReader>();
             final ElasticsearchScanSpec spec = subScan.getScanSpec();
             if (subScan.getSplits().isEmpty()) {
-                readers.add((RecordReader)new ElasticsearchAggregatorReader(context, plugin.getConfig(), spec, null, plugin.getConnection((Iterable)ImmutableList.of()), subScan.getAggregates(), subScan.getColumns(), subScan.getFullSchema(), (List<String>)Iterables.getOnlyElement((Iterable)subScan.getReferencedTables())));
+                readers.add(new ElasticsearchAggregatorReader(context, plugin.getConfig(), spec, null, plugin.getConnection(ImmutableList.of()), subScan.getAggregates(), subScan.getColumns(), subScan.getFullSchema(), Iterables.getOnlyElement(subScan.getReferencedTables())));
             }
             else {
                 for (final SplitAndPartitionInfo split : subScan.getSplits()) {
-                    final ElasticConnectionPool.ElasticConnection connection = plugin.getConnection((Iterable)FluentIterable.from((Iterable)split.getDatasetSplitInfo().getAffinitiesList()).transform((Function)new Function<PartitionProtobuf.Affinity, String>() {
+                    final ElasticConnectionPool.ElasticConnection connection = plugin.getConnection(FluentIterable.from(split.getDatasetSplitInfo().getAffinitiesList()).transform(new Function<PartitionProtobuf.Affinity, String>() {
                         public String apply(final PartitionProtobuf.Affinity input) {
                             return input.getHost();
                         }
                     }));
-                    readers.add((RecordReader)new ElasticsearchAggregatorReader(context, plugin.getConfig(), spec, split, connection, subScan.getAggregates(), subScan.getColumns(), subScan.getFullSchema(), (List<String>)Iterables.getOnlyElement((Iterable)subScan.getReferencedTables())));
+                    readers.add((RecordReader)new ElasticsearchAggregatorReader(context, plugin.getConfig(), spec, split, connection, subScan.getAggregates(), subScan.getColumns(), subScan.getFullSchema(), Iterables.getOnlyElement(subScan.getReferencedTables())));
                 }
             }
-            return (ProducerOperator)new ScanOperator((SubScan)subScan, context, (Iterator)readers.iterator());
+            return new ScanOperator(subScan, context, readers.iterator());
         }
         catch (InvalidProtocolBufferException e) {
-            throw new ExecutionSetupException((Throwable)e);
+            throw new ExecutionSetupException(e);
         }
     }
 }

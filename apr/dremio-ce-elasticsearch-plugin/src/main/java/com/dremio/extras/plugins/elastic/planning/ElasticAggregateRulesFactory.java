@@ -16,9 +16,9 @@ public class ElasticAggregateRulesFactory extends ElasticRulesFactory
         if (phase == PlannerPhase.PHYSICAL && optimizerContext.getPlannerSettings().getOptions().getOption(ExecConstants.ELASTIC_RULES_AGGREGATE)) {
             final ImmutableSet.Builder<RelOptRule> rules = ImmutableSet.builder();
             rules.addAll(super.getRules(optimizerContext, phase, pluginType));
-            rules.add(new ElasticAggregateRule((FunctionLookupContext)optimizerContext.getFunctionRegistry()));
-            return (Set<RelOptRule>)rules.build();
+            rules.add(new ElasticAggregateRule(optimizerContext.getFunctionRegistry()));
+            return rules.build();
         }
-        return (Set<RelOptRule>)super.getRules(optimizerContext, phase, pluginType);
+        return super.getRules(optimizerContext, phase, pluginType);
     }
 }

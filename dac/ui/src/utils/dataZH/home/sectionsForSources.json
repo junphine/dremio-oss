@@ -1,0 +1,328 @@
+[
+  {
+    "id": "HDFS",
+    "name": "HDFS",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "主机",
+            "id": "主机",
+            "type": "string"
+          },
+          {
+            "name": "端口",
+            "id": "端口",
+            "type": "number"
+          },
+          {
+            "name": "属性",
+            "id": "属性列表",
+            "type": "repeated",
+            "fields": [
+              {
+                "id": "名称",
+                "name": "名称",
+                "type": "string"
+              },
+              {
+                "id": "值",
+                "name": "值",
+                "type": "string"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "MONGO",
+    "name": "MongoDb",
+    "sections": [
+      {
+        "name": "连接",
+        "id": "连接字符串",
+        "type": "connection",
+        "fields": [
+          {
+            "name": "连接",
+            "id": "连接字符串",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "主机",
+            "id": "主机",
+            "type": "string"
+          },
+          {
+            "name": "端口",
+            "id": "端口",
+            "type": "number"
+          },
+          {
+            "name": "实例",
+            "id": "实例",
+            "type": "string"
+          },
+          {
+            "name": "用户名",
+            "id": "用户名",
+            "type": "string"
+          },
+          {
+            "name": "密码",
+            "id": "密码",
+            "type": "password"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "弹性",
+    "name": "弹性",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "主机",
+            "id": "种子主机列表",
+            "type": "repeated",
+            "subtype": "list"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "linux集群",
+    "name": "Linux集群"
+  },
+  {
+    "id": "Google分析",
+    "name": "Google分析"
+  },
+  {
+    "id": "Saleforce",
+    "name": "Saleforce"
+  },
+  {
+    "id": "maprfs",
+    "name": "MapRFS",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "引擎",
+            "id": "集群名称",
+            "type": "string"
+          },
+          {
+            "name": "CLDB",
+            "id": "cldb列表",
+            "type": "repeated",
+            "subtype": "list"
+          },
+          {
+            "name": "属性",
+            "id": "属性列表",
+            "type": "repeated",
+            "fields": [
+              {
+                "id": "名称",
+                "name": "名称",
+                "type": "string"
+              },
+              {
+                "id": "值",
+                "name": "值",
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "name": "安全",
+            "id": "安全",
+            "type": "bool"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "MySQL",
+    "name": "MySQL",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "type": "string",
+            "id": "主机",
+            "name": "主机"
+          },
+          {
+            "type": "number",
+            "id": "端口",
+            "name": "端口"
+          },
+          {
+            "name": "用户名",
+            "id": "用户名",
+            "type": "string"
+          },
+          {
+            "name": "密码",
+            "id": "密码",
+            "type": "password"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NAS",
+    "name": "NAS",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "路径",
+            "id": "路径",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "S3",
+    "name": "S3",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "密钥",
+            "id": "访问密钥",
+            "type": "string"
+          },
+          {
+            "name": "密码",
+            "id": "访问密码",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "Buckets",
+        "id": "externalBucketsList",
+        "type": "buckets",
+        "fields": [
+          {
+            "name": "Buckets",
+            "id": "externalBucketsList",
+            "type": "repeated",
+            "subtype": "list"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Postgres",
+    "name": "PostgreSQL",
+    "sections": [
+      {
+        "name": "Config",
+        "id": "config",
+        "fields": [
+          {
+            "name": "Host",
+            "id": "host",
+            "type": "string"
+          },
+          {
+            "name": "Port",
+            "id": "port",
+            "type": "number"
+          },
+          {
+            "name": "Database",
+            "id": "databaseName",
+            "type": "string"
+          },
+          {
+            "name": "Username",
+            "id": "username",
+            "type": "string"
+          },
+          {
+            "name": "Password",
+            "id": "password",
+            "type": "password"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Redshift",
+    "name": "Redshift",
+    "sections": [
+      {
+        "name": "Connection",
+        "id": "connectionString",
+        "type": "connection",
+        "fields": [
+          {
+            "name": "Connection",
+            "id": "connectionString",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Kudu",
+    "name": "Kudu",
+    "sections": [
+      {
+        "name": "配置",
+        "id": "配置",
+        "fields": [
+          {
+            "name": "主地址",
+            "id": "主地址列表",
+            "type": "repeated",
+            "subtype": "list"
+          }
+        ]
+      }
+    ]
+  }
+]

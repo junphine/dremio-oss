@@ -44,7 +44,7 @@ public class ElasticAggregateRule extends RelOptRule
         final ElasticsearchIntermediatePrel oldInter = call.rel(1);
         final ElasticsearchAggregate newAggregate = new ElasticsearchAggregate(oldInter.getInput().getCluster(), oldInter.getInput().getTraitSet(), oldInter.getInput(), aggregate.indicator, aggregate.getGroupSet(), aggregate.getGroupSets(), aggregate.getAggCallList(), oldInter.getPluginId());
         final ElasticsearchIntermediatePrel newInter = oldInter.withNewInput((ElasticsearchPrel)newAggregate);
-        call.transformTo((RelNode)newInter);
+        call.transformTo(newInter);
     }
     
     public static boolean contains(final List<List<SchemaPath>> sourcesNames, final String columnName) {
@@ -195,14 +195,14 @@ public class ElasticAggregateRule extends RelOptRule
         }
         List<Optional<FieldAnnotation>> annotations;
         if (project != null) {
-            annotations = (List<Optional<FieldAnnotation>>)FluentIterable.from((Iterable)project.getChildExps()).transform((Function)new Function<RexNode, Optional<FieldAnnotation>>() {
+            annotations = FluentIterable.from(project.getChildExps()).transform(new Function<RexNode, Optional<FieldAnnotation>>() {
                 public Optional<FieldAnnotation> apply(final RexNode input) {
                     return (Optional<FieldAnnotation>)Optional.fromNullable(scan.getAnnotation(input, ElasticIntermediateScanPrel.IndexMode.SKIP));
                 }
             }).toList();
         }
         else {
-            annotations = (List<Optional<FieldAnnotation>>)FluentIterable.from((Iterable)inputSchema.getFields()).transform((Function)new Function<Field, Optional<FieldAnnotation>>() {
+            annotations = FluentIterable.from(inputSchema.getFields()).transform(new Function<Field, Optional<FieldAnnotation>>() {
                 public Optional<FieldAnnotation> apply(final Field input) {
                     return (Optional<FieldAnnotation>)Optional.fromNullable(scan.getAnnotation(SchemaPath.getSimplePath(input.getName())));
                 }

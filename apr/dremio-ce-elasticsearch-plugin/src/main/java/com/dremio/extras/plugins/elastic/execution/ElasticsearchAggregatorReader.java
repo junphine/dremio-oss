@@ -68,7 +68,7 @@ public class ElasticsearchAggregatorReader extends AbstractRecordReader
     private NonNullableStructVector structVector;
     
     public ElasticsearchAggregatorReader(final OperatorContext context, final ElasticsearchConf config, final ElasticsearchScanSpec spec, final SplitAndPartitionInfo split, final ElasticConnectionPool.ElasticConnection connection, final List<ElasticsearchAggExpr> aggregates, final List<SchemaPath> columns, final BatchSchema schema, final List<String> tableSchemaPath) throws InvalidProtocolBufferException {
-        super(context, (List)columns);
+        super(context, columns);
         this.firstIteration = true;
         this.processedTotal = 0;
         this.processed = 0;
@@ -145,17 +145,17 @@ public class ElasticsearchAggregatorReader extends AbstractRecordReader
                     final JsonProcessor.ReadState readState = jsonReader.write((BaseWriter.ComplexWriter)writer);
                     Preconditions.checkState(readState == JsonProcessor.ReadState.WRITE_SUCCEED, "Failed to parse json response");
                     writer.setValueCount(1);
-                    this.totalResultReader = (FieldReader)((StructVector)this.structVector.getChild("root", StructVector.class)).getReader();
+                    this.totalResultReader = (this.structVector.getChild("root", StructVector.class)).getReader();
                 }
                 catch (UserException e) {
                     if (e.getErrorType() == UserBitShared.DremioPBError.ErrorType.INVALID_DATASET_METADATA) {
                         ElasticsearchAggregatorReader.logger.trace("failed with invalid metadata, ", (Throwable)e);
-                        throw UserException.invalidMetadataError().setAdditionalExceptionContext((AdditionalExceptionContext)new InvalidMetadataErrorContext((List)Collections.singletonList(this.tableSchemaPath))).build(ElasticsearchAggregatorReader.logger);
+                        throw UserException.invalidMetadataError().setAdditionalExceptionContext(new InvalidMetadataErrorContext(Collections.singletonList(this.tableSchemaPath))).build(ElasticsearchAggregatorReader.logger);
                     }
                     throw e;
                 }
                 catch (TimeoutException e2) {
-                    throw UserException.dataReadError((Throwable)e2).message("Elastic aggregation didn't return within the configured timeout of %s milliseconds.", new Object[] { Long.toString(this.readTimeoutMillis) }).build(ElasticsearchAggregatorReader.logger);
+                    throw UserException.dataReadError(e2).message("Elastic aggregation didn't return within the configured timeout of %s milliseconds.", new Object[] { Long.toString(this.readTimeoutMillis) }).build(ElasticsearchAggregatorReader.logger);
                 }
                 finally {
                     this.stats.stopWait();

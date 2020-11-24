@@ -47,7 +47,7 @@ public class ElasticsearchAggregatorSubScan extends SubScanWithProjection
     }
     
     public PhysicalOperator getNewWithChildren(final List<PhysicalOperator> children) throws ExecutionSetupException {
-        return (PhysicalOperator)new ElasticsearchAggregatorSubScan(this.getProps(), (List<String>)Iterables.getOnlyElement((Iterable)this.getReferencedTables()), this.getColumns(), this.getAggregates(), this.getScanSpec(), this.getSplits(), this.getPluginId(), this.getFullSchema());
+        return (PhysicalOperator)new ElasticsearchAggregatorSubScan(this.getProps(), (List<String>)Iterables.getOnlyElement(this.getReferencedTables()), this.getColumns(), this.getAggregates(), this.getScanSpec(), this.getSplits(), this.getPluginId(), this.getFullSchema());
     }
     
     @JsonProperty("spec")
@@ -84,10 +84,10 @@ public class ElasticsearchAggregatorSubScan extends SubScanWithProjection
     }
     
     public void collectMinorSpecificAttrs(final MinorDataWriter writer) {
-        SplitNormalizer.write(this.getProps(), writer, (List)this.splits);
+        SplitNormalizer.write(this.getProps(), writer, this.splits);
     }
     
     public void populateMinorSpecificAttrs(final MinorDataReader reader) throws Exception {
-        this.splits = (List<SplitAndPartitionInfo>)SplitNormalizer.read(this.getProps(), reader);
+        this.splits = SplitNormalizer.read(this.getProps(), reader);
     }
 }

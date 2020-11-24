@@ -1,0 +1,27 @@
+[
+  {
+    "name": "值",
+    "id": "值",
+    "types": ["TEXT", "BOOLEAN"]
+  },
+  {
+    "name": "精确",
+    "id": "精确",
+    "types": ["INTEGER", "GEO", "FLOAT", "DECIMAL", "DATETIME", "TIME", "DATE"]
+  },
+  {
+    "name": "图表",
+    "id": "图表",
+    "types": ["TEXT"]
+  },
+  {
+    "name": "范围",
+    "id": "范围",
+    "types": ["INTEGER", "GEO", "FLOAT", "DECIMAL", "DATETIME", "TIME", "DATE"]
+  },
+  {
+    "name": "自定义条件",
+    "id": "自定义",
+    "types": ["TEXT", "INTEGER", "GEO", "FLOAT", "DECIMAL", "DATETIME", "TIME", "DATE"]
+  }
+]

@@ -34,7 +34,7 @@ public final class MSSQLLegacyDialect extends LegacyDialect
             
             public void unparse(final SqlWriter writer, final int leftPrec, final int rightPrec) {
                 writer.keyword("COLLATE");
-                writer.keyword("Latin1_General_BIN2");
+                writer.keyword("Chinese_PRC_CI_AS");
             }
         };
     }
@@ -204,7 +204,7 @@ public final class MSSQLLegacyDialect extends LegacyDialect
     
     static {
         INSTANCE = new MSSQLLegacyDialect();
-        SUPPORTED_WINDOW_AGG_CALLS = (Set)ImmutableSet.of(SqlStdOperatorTable.COUNT, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
+        SUPPORTED_WINDOW_AGG_CALLS = ImmutableSet.of(SqlStdOperatorTable.COUNT, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
         DISABLE_PUSH_COLLATION = Boolean.getBoolean("dremio.jdbc.mssql.push-collation.disable");
     }
 }

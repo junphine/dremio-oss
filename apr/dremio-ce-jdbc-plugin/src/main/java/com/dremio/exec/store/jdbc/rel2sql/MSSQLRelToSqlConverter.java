@@ -33,16 +33,16 @@ public class MSSQLRelToSqlConverter extends JdbcDremioRelToSqlConverter
     public void addSelect(final List<SqlNode> selectList, final SqlNode node, final RelDataType rowType) {
         if (node instanceof SqlIdentifier && ((SqlIdentifier)node).getCollation() != null) {
             final String name = rowType.getFieldNames().get(selectList.size());
-            selectList.add((SqlNode)SqlStdOperatorTable.AS.createCall(MSSQLRelToSqlConverter.POS, new SqlNode[] { node, new SqlIdentifier(name, MSSQLRelToSqlConverter.POS) }));
+            selectList.add(SqlStdOperatorTable.AS.createCall(MSSQLRelToSqlConverter.POS, new SqlNode[] { node, new SqlIdentifier(name, MSSQLRelToSqlConverter.POS) }));
         }
         else {
-            super.addSelect((List)selectList, node, rowType);
+            super.addSelect(selectList, node, rowType);
         }
     }
     
     public SqlWindow adjustWindowForSource(final DremioRelToSqlConverter.DremioContext context, final SqlAggFunction op, final SqlWindow window) {
-        final List<SqlAggFunction> opsToAddOrderByTo = (List<SqlAggFunction>)ImmutableList.of(SqlStdOperatorTable.ROW_NUMBER, SqlStdOperatorTable.CUME_DIST, SqlStdOperatorTable.LAG, SqlStdOperatorTable.LEAD, SqlStdOperatorTable.NTILE, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
-        return addDummyOrderBy(window, context, op, (List)opsToAddOrderByTo);
+        final List<SqlAggFunction> opsToAddOrderByTo = ImmutableList.of(SqlStdOperatorTable.ROW_NUMBER, SqlStdOperatorTable.CUME_DIST, SqlStdOperatorTable.LAG, SqlStdOperatorTable.LEAD, SqlStdOperatorTable.NTILE, SqlStdOperatorTable.LAST_VALUE, SqlStdOperatorTable.FIRST_VALUE);
+        return addDummyOrderBy(window, context, op, opsToAddOrderByTo);
     }
     
     protected boolean canAddCollation(final RelDataTypeField field) {
@@ -87,10 +87,10 @@ public class MSSQLRelToSqlConverter extends JdbcDremioRelToSqlConverter
             builder.setFetch(builder.context.toSql((RexProgram)null, e.fetch));
             final List<SqlNode> newOrderByList = Expressions.list();
             for (final RelFieldCollation field : e.getCollation().getFieldCollations()) {
-                builder.addOrderItem((List)newOrderByList, field);
+                builder.addOrderItem(newOrderByList, field);
             }
             if (!newOrderByList.isEmpty()) {
-                builder.setOrderBy(new SqlNodeList((Collection)newOrderByList, MSSQLRelToSqlConverter.POS));
+                builder.setOrderBy(new SqlNodeList(newOrderByList, MSSQLRelToSqlConverter.POS));
             }
             return builder.result();
         }
@@ -121,9 +121,9 @@ public class MSSQLRelToSqlConverter extends JdbcDremioRelToSqlConverter
             }
             this.addSelect(selectList, aggCallSqlNode, e.getRowType());
         }
-        builder.setSelect(new SqlNodeList((Collection)selectList, MSSQLRelToSqlConverter.POS));
+        builder.setSelect(new SqlNodeList(selectList, MSSQLRelToSqlConverter.POS));
         if (!groupByList.isEmpty() || e.getAggCallList().isEmpty()) {
-            builder.setGroupBy(new SqlNodeList((Collection)groupByList, MSSQLRelToSqlConverter.POS));
+            builder.setGroupBy(new SqlNodeList(groupByList, MSSQLRelToSqlConverter.POS));
         }
     }
     
@@ -137,7 +137,7 @@ public class MSSQLRelToSqlConverter extends JdbcDremioRelToSqlConverter
         if (SqlTypeName.DATETIME_TYPES.contains(sourceType) && SqlTypeName.CHAR_TYPES.contains(targetType)) {
             final SqlNode sourceTypeNode = context.toSql(program, (RexNode)operands.get(0));
             final SqlNode targetTypeNode = this.dialect.getCastSpec(call.getType());
-            final SqlNodeList nodeList = new SqlNodeList((Collection)ImmutableList.of(targetTypeNode, sourceTypeNode, MSSQLRelToSqlConverter.MSSQL_ODBC_FORMAT_SPEC), SqlParserPos.ZERO);
+            final SqlNodeList nodeList = new SqlNodeList(ImmutableList.of(targetTypeNode, sourceTypeNode, MSSQLRelToSqlConverter.MSSQL_ODBC_FORMAT_SPEC), SqlParserPos.ZERO);
             return (SqlNode)MSSQLRelToSqlConverter.CONVERT_FUNCTION.createCall(nodeList);
         }
         return null;

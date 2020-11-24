@@ -1,0 +1,16 @@
+[
+  {
+    "name": "dotItem",
+    "activeDotItem": "activeDotItem",
+    "determ": "activeDotItem",
+    "width": 200,
+    "values": [
+      {
+        "name": "发布到数据源"
+      },
+      {
+        "name": "发布到Tableau服务器"
+      }
+    ]
+  }
+]

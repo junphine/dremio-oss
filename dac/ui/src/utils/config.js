@@ -67,6 +67,8 @@ export default { // defaults, and defaults for unit tests
   },
   tdsMimeType: 'application/tds',
   davinciUrl: 'http://127.0.0.1:8080/#/project/1/views',
+  useRunTimeLanguage: false,
+  language: 'zh-CN',
   crossSourceDisabled: false,
   ...((window && window.dremioConfig) || {})
 };

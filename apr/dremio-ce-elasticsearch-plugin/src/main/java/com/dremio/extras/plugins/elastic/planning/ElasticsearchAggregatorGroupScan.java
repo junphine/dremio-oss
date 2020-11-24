@@ -18,7 +18,7 @@ public class ElasticsearchAggregatorGroupScan extends AbstractGroupScan
     private final BatchSchema schema;
     
     public ElasticsearchAggregatorGroupScan(final OpProps props, final TableMetadata dataset, final List<ElasticsearchAggExpr> aggregates, final ElasticsearchScanSpec spec, final long rowCountEstimate, final BatchSchema schema) {
-        super(props, dataset, (List)GroupScan.ALL_COLUMNS);
+        super(props, dataset, GroupScan.ALL_COLUMNS);
         this.aggregates = aggregates;
         this.spec = spec;
         this.rowCountEstimate = rowCountEstimate;

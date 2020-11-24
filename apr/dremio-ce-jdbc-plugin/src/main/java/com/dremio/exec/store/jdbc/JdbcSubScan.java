@@ -18,7 +18,7 @@ public class JdbcSubScan extends SubScanWithProjection
     private final Set<String> skippedColumns;
     
     public JdbcSubScan(@JsonProperty("props") final OpProps props, @JsonProperty("sql") final String sql, @JsonProperty("columns") final List<SchemaPath> columns, @JsonProperty("pluginId") final StoragePluginId pluginId, @JsonProperty("fullSchema") final BatchSchema fullSchema, @JsonProperty("referenced-tables") final Collection<List<String>> tableList, @JsonProperty("skipped-columns") final Set<String> skippedColumns) throws ExecutionSetupException {
-        super(props, fullSchema, (Collection)tableList, (List)columns);
+        super(props, fullSchema, tableList, columns);
         Preconditions.checkArgument(sql != null && !sql.isEmpty(), "JDBC pushdown SQL string cannot be empty in JdbcSubScan");
         this.sql = sql;
         this.columns = columns;
