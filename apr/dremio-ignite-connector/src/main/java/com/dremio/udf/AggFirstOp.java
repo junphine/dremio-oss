@@ -87,7 +87,7 @@ public class AggFirstOp {
 	static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AggFirstOp.class);
 
 
-@FunctionTemplate(name = "my_first", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
+@FunctionTemplate(name = "firstvalue", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
 public static class NullableVarCharFirst implements AggrFunction{
 
   @Param NullableVarCharHolder in;
@@ -165,7 +165,7 @@ public static class NullableVarCharFirst implements AggrFunction{
   }
 }
 
-@FunctionTemplate(name = "my_first", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
+@FunctionTemplate(name = "firstvalue", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
 public static class NullableVarBinaryFirst implements AggrFunction{
 
   @Param NullableVarBinaryHolder in;

@@ -187,11 +187,7 @@
         <exclusion>
           <artifactId>freemarker</artifactId>
           <groupId>org.freemarker</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hazelcast</artifactId>
-          <groupId>com.hazelcast</groupId>
-        </exclusion>
+        </exclusion>    
         <exclusion>
           <artifactId>commons-compiler-jdk</artifactId>
           <groupId>org.codehaus.janino</groupId>

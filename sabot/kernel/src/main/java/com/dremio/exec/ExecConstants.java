@@ -174,7 +174,7 @@ public interface ExecConstants {
       PARQUET_WRITER_ENABLE_DICTIONARY_ENCODING, false);
 
   String EXCEL_MAX_FILE_SIZE = "store.excel.max_file_size";
-  LongValidator EXCEL_MAX_FILE_SIZE_VALIDATOR = new LongValidator(EXCEL_MAX_FILE_SIZE, 10*1024*1024);
+  LongValidator EXCEL_MAX_FILE_SIZE_VALIDATOR = new LongValidator(EXCEL_MAX_FILE_SIZE, 1024*1024*1024); //modify@byron old 10*1024*1024
 
   String PARQUET_WRITER_ENABLE_DICTIONARY_ENCODING_BINARY_TYPE = "store.parquet.enable_dictionary_encoding_binary_type";
   BooleanValidator PARQUET_WRITER_ENABLE_DICTIONARY_ENCODING_BINARY_TYPE_VALIDATOR = new BooleanValidator(
@@ -336,7 +336,7 @@ public interface ExecConstants {
   EnumValidator<FragmentCodec> FRAGMENT_CODEC = new EnumValidator<>(FRAGMENT_CODEC_KEY, FragmentCodec.class, FragmentCodec.SNAPPY);
 
   String ENABLE_VERBOSE_ERRORS_KEY = "exec.errors.verbose";
-  OptionValidator ENABLE_VERBOSE_ERRORS = new BooleanValidator(ENABLE_VERBOSE_ERRORS_KEY, false);
+  OptionValidator ENABLE_VERBOSE_ERRORS = new BooleanValidator(ENABLE_VERBOSE_ERRORS_KEY, true);
 
   String ENABLE_NEW_TEXT_READER_KEY = "exec.storage.enable_new_text_reader";
   OptionValidator ENABLE_NEW_TEXT_READER = new BooleanValidator(ENABLE_NEW_TEXT_READER_KEY, true);

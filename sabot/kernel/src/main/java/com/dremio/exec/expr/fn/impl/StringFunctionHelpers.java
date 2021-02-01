@@ -17,6 +17,7 @@ package com.dremio.exec.expr.fn.impl;
 
 import org.apache.arrow.memory.ArrowBuf;
 import org.apache.arrow.memory.BoundsChecking;
+import org.apache.arrow.vector.holders.NullableVarCharHolder;
 import org.apache.arrow.vector.holders.VarCharHolder;
 import org.joda.time.chrono.ISOChronology;
 
@@ -196,6 +197,10 @@ public class StringFunctionHelpers {
    */
   public static String getStringFromVarCharHolder(VarCharHolder varCharHolder) {
     return toStringFromUTF8(varCharHolder.start, varCharHolder.end, varCharHolder.buffer);
+  }
+  //add@byron
+  public static String getStringFromVarCharHolder(NullableVarCharHolder varCharHolder) {
+	return toStringFromUTF8(varCharHolder.start, varCharHolder.end, varCharHolder.buffer);
   }
 
   public static String toStringFromUTF8(int start, int end, ArrowBuf buffer) {

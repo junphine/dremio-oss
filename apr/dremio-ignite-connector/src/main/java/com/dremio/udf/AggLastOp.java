@@ -87,7 +87,7 @@ public class AggLastOp {
 	static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AggLastOp.class);
 
 
-@FunctionTemplate(name = "my_last", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
+@FunctionTemplate(name = "lastvalue", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
 public static class NullableVarCharLast implements AggrFunction{
 
   @Param NullableVarCharHolder in;
@@ -136,7 +136,7 @@ public static class NullableVarCharLast implements AggrFunction{
   }
 }
 
-@FunctionTemplate(name = "my_last", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
+@FunctionTemplate(name = "lastvalue", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
 public static class NullableVarBinaryLast implements AggrFunction{
 
   @Param NullableVarBinaryHolder in;

@@ -95,7 +95,7 @@ public class TextFormatPlugin extends EasyFormatPlugin<TextFormatPlugin.TextForm
   @JsonTypeName("text") @JsonInclude(Include.NON_DEFAULT)
   public static class TextFormatConfig implements FormatPluginConfig {
 
-    public List<String> extensions = ImmutableList.of("txt");
+    public List<String> extensions = ImmutableList.of("txt","csv");
     public String lineDelimiter = "\n";
     public char fieldDelimiter = '\u0000';
     public char quote = '"';
@@ -105,6 +105,7 @@ public class TextFormatPlugin extends EasyFormatPlugin<TextFormatPlugin.TextForm
     public boolean extractHeader = false;
     public boolean autoGenerateColumnNames = false;
     public boolean trimHeader = true;
+    public String encoding = "UTF-8"; //add@byron
 
     /**
      * Extension of files written out with config as part of CTAS.
@@ -162,6 +163,11 @@ public class TextFormatPlugin extends EasyFormatPlugin<TextFormatPlugin.TextForm
     @JsonProperty("trimHeader")
     public boolean isTrimHeaderEnabled() {
       return trimHeader;
+    }
+
+    @JsonProperty("encoding")
+    public String getEncoding() {
+      return encoding;
     }
 
     @Override

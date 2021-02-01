@@ -107,10 +107,7 @@
     <module name="LocalVariableName"/>
     <module name="MemberName"/>
     <module name="MethodName"/>
-    <module name="RegexpSinglelineJava">
-      <property name="format" value="[ ]$"/>
-      <property name="message" value="Trailing whitespace"/>
-    </module>
+   
 
     <module name="RegexpSinglelineJava">
       <property name="format" value="extends RelShuttleImpl"/>

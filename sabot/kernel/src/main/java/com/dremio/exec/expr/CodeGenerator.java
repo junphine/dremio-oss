@@ -72,6 +72,7 @@ public class CodeGenerator<T> {
       clazz = clazz._extends(model.directClass(definition.getTemplateClassName()));
       clazz.constructor(JMod.PUBLIC).body().invoke(SignatureHolder.INIT_METHOD);
       rootGenerator = new ClassGenerator<>(this, mappingSet, definition.getSignature(), new EvaluationVisitor(functionContext), clazz, model);
+
     } catch (JClassAlreadyExistsException e) {
       throw new IllegalStateException(e);
     }
@@ -99,6 +100,16 @@ public class CodeGenerator<T> {
         .replaceAll(Pattern.quote("new DateMilliHolder()"), "new NullableDateMilliHolder()")
         .replaceAll(Pattern.quote("new TimeMilliHolder()"), "new NullableTimeMilliHolder()")
         .replaceAll(Pattern.quote("new DecimalHolder()"), "new NullableDecimalHolder()");
+
+    //add@byron import classes
+    StringBuilder imports = new StringBuilder();
+
+    imports.append("import java.util.*;\n");
+    imports.append("import com.dremio.exec.expr.fn.impl.StringFunctionUtil;\n");
+    imports.append("import com.dremio.exec.expr.fn.impl.StringFunctionHelpers;\n");
+    imports.append("import ");
+    this.generatedCode = this.generatedCode.replaceFirst("import\\s", imports.toString());
+    //end
 
     this.generifiedCode = generatedCode.replaceAll(this.className, "GenericGenerated");
 

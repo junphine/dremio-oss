@@ -18,6 +18,8 @@ package com.dremio.udf;
 import javax.inject.Inject;
 
 import org.apache.arrow.memory.ArrowBuf;
+import org.apache.arrow.vector.holders.NullableBigIntHolder;
+import org.apache.arrow.vector.holders.NullableFloat8Holder;
 import org.apache.arrow.vector.holders.NullableVarCharHolder;
 import org.apache.arrow.vector.holders.VarCharHolder;
 
@@ -27,14 +29,18 @@ import com.dremio.exec.expr.annotations.FunctionTemplate.FunctionScope;
 import com.dremio.exec.expr.annotations.FunctionTemplate.NullHandling;
 import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
-
-
+/**
+ * 不定长参数
+ * @author WBPC1158
+ *
+ */
+public class ConcatOp {
 
 @FunctionTemplate(
-    name = "example_concat_op",
+    name = "my_concat",
     scope = FunctionScope.SIMPLE,
     nulls = NullHandling.NULL_IF_NULL)
-public class ConcatOp implements SimpleFunction {
+public static class VarCharConcatOp implements SimpleFunction {
 
   @Inject ArrowBuf buffer;
 
@@ -75,3 +81,149 @@ public class ConcatOp implements SimpleFunction {
 	}
   }
 }
+
+
+
+@FunctionTemplate(
+    name = "least",
+    scope = FunctionScope.SIMPLE,
+    nulls = NullHandling.NULL_IF_NULL)
+public static class BigIntLeastOp implements SimpleFunction {
+
+  @Param public NullableBigIntHolder left;
+  @Param public NullableBigIntHolder right;
+  @Output public NullableBigIntHolder out;
+
+  @Override
+  public void setup() {
+  }
+
+  @Override
+  public void eval() {
+	if(left.isSet==0 && right.isSet==0) {
+		return;
+	}
+	else if(left.isSet==0) {
+		out = right;
+	}
+	else if(right.isSet==0) {
+		out = left;
+	}
+	else if(left.value<=right.value){
+		out = left;
+	}
+	else {
+		out = right;
+	}
+  }
+}
+
+
+
+@FunctionTemplate(
+    name = "least",
+    scope = FunctionScope.SIMPLE,
+    nulls = NullHandling.NULL_IF_NULL)
+public static class Float8LeastOp implements SimpleFunction { 
+
+  @Param public NullableFloat8Holder left;
+  @Param public NullableFloat8Holder right;
+  @Output public NullableFloat8Holder out;
+
+  @Override
+  public void setup() {
+  }
+
+  @Override
+  public void eval() {
+	if(left.isSet==0 && right.isSet==0) {
+		return;
+	}
+	else if(left.isSet==0) {
+		out = right;
+	}
+	else if(right.isSet==0) {
+		out = left;
+	}
+	else if(left.value<=right.value){
+		out = left;
+	}
+	else {
+		out = right;
+	}
+  }
+}
+
+@FunctionTemplate(
+    name = "greatest",
+    scope = FunctionScope.SIMPLE,
+    nulls = NullHandling.NULL_IF_NULL)
+public static class BigIntGreatestOp implements SimpleFunction {
+
+ 
+  @Param public NullableBigIntHolder left;
+  @Param public NullableBigIntHolder right;
+  @Output public NullableBigIntHolder out;
+
+  @Override
+  public void setup() {
+  }
+
+  @Override
+  public void eval() {
+	if(left.isSet==0 && right.isSet==0) {
+		return;
+	}
+	else if(left.isSet==0) {
+		out = right;
+	}
+	else if(right.isSet==0) {
+		out = left;
+	}
+	else if(left.value>=right.value){
+		out = left;
+	}
+	else {
+		out = right;
+	}
+  }
+}
+
+
+@FunctionTemplate(
+    name = "greatest",
+    scope = FunctionScope.SIMPLE,
+    nulls = NullHandling.NULL_IF_NULL)
+public static class Float8GreatestOp implements SimpleFunction {
+
+ 
+  @Param public NullableFloat8Holder left;
+  @Param public NullableFloat8Holder right;
+  @Output public NullableFloat8Holder out;
+
+  @Override
+  public void setup() {
+  }
+
+  @Override
+  public void eval() {
+	if(left.isSet==0 && right.isSet==0) {
+		return;
+	}
+	else if(left.isSet==0) {
+		out = right;
+	}
+	else if(right.isSet==0) {
+		out = left;
+	}
+	else if(left.value>=right.value){
+		out = left;
+	}
+	else {
+		out = right;
+	}
+  }
+}
+
+}
+

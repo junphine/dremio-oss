@@ -83,7 +83,9 @@ class NamespaceInternalKey {
   // Max and Min values for building root lookup keys.
 
   //The largest valid 2-byte value in UTF-8. This value is used as a terminator for end range keys.
-  static final byte[] MAX_2_BYTES_UTF8_VALUE = new byte[]{(byte) 0xdf, (byte)0xbf}; //U+07FF
+  //modify@byron
+  //-static final byte[] MAX_2_BYTES_UTF8_VALUE = new byte[]{(byte) 0xdf, (byte)0xbf}; //U+07FF
+  static final byte[] MAX_2_BYTES_UTF8_VALUE = new byte[]{(byte) 0xf7, (byte)0xbf}; //U+ffFF
   //The smallest valid value in UTF-8. This value is used as a terminator for start range keys.
   private static final byte[] MIN_UTF8_VALUE = new byte[]{(byte) 0x0};
 

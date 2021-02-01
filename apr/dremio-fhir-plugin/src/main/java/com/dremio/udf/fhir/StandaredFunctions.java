@@ -1,5 +1,6 @@
 package com.dremio.udf.fhir;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import com.dremio.exec.expr.SimpleFunction;
 import com.dremio.exec.expr.annotations.FunctionTemplate;
 import com.dremio.exec.expr.annotations.Output;
 import com.dremio.exec.expr.annotations.Param;
+import com.dremio.exec.expr.annotations.Workspace;
 import com.dremio.exec.expr.annotations.FunctionTemplate.FunctionCostCategory;
 import com.dremio.exec.expr.annotations.FunctionTemplate.FunctionScope;
 import com.dremio.exec.expr.annotations.FunctionTemplate.NullHandling;
@@ -38,8 +40,12 @@ public class StandaredFunctions {
     @Param VarCharHolder name;
     @Param NullableVarCharHolder group;
     @Output VarCharHolder out;
+    
+    @Workspace
+    Map<String,Object> json;
 
     public void setup() {
+    	
     }
 
     public void eval() {
@@ -61,15 +67,22 @@ public class StandaredFunctions {
 		
 		String path = "/standardize/gateway/"+typeName+"/"+verName;
 		
-		Map<String,Object> json = com.dremio.udf.fhir.HttpUtil.jsonGetCall(com.dremio.udf.fhir.HttpUtil.serviceUrl + path,params.toString());
+		json = com.dremio.udf.fhir.HttpUtil.jsonGetCall(com.dremio.udf.fhir.HttpUtil.serviceUrl + path,params.toString());
 		
 		String msg = json.toString();
-		byte[] buf = msg.getBytes();
-    	int finalLength = buf.length;
-    	out.buffer = buffer = buffer.reallocIfNeeded(finalLength);
-	    out.start = 0;
-	    out.end = finalLength;
-	    out.buffer.setBytes(0, buf);
+		byte[] buf;
+		try {
+			buf = msg.getBytes("UTF-8");
+			int finalLength = buf.length;
+	    	out.buffer = buffer = buffer.reallocIfNeeded(finalLength);
+		    out.start = 0;
+		    out.end = finalLength;
+		    out.buffer.setBytes(0, buf);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
 	    
     }
   }
@@ -85,6 +98,9 @@ public class StandaredFunctions {
     @Param VarCharHolder table;
     @Output VarCharHolder out;
 
+    @Workspace
+    Map<String,Object> json;
+    
     public void setup() {
     }
 
@@ -104,9 +120,9 @@ public class StandaredFunctions {
 		
 		String path = "/standardize/processTable/"+typeName+"/"+verName;
 		
-		com.dremio.udf.fhir.HttpUtil.jsonGetCall(com.dremio.udf.fhir.HttpUtil.serviceUrl +path,params.toString());
+		json = com.dremio.udf.fhir.HttpUtil.jsonGetCall(com.dremio.udf.fhir.HttpUtil.serviceUrl +path,params.toString());
 		
-		String msg = "OK";//json.toString();
+		String msg = json.toString();
 		byte[] buf = msg.getBytes();
     	int finalLength = buf.length;
     	out.buffer = buffer = buffer.reallocIfNeeded(finalLength);
